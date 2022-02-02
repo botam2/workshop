@@ -1,0 +1,648 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Datamares &amp; Dreamscapes</title>
+    <link>https://datamares.netlify.app/</link>
+    <description>Recent content on Datamares &amp; Dreamscapes</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <copyright>Copyright © 2021, Alberson Miranda; all rights reserved.</copyright>
+    <lastBuildDate>Sun, 27 Dec 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://datamares.netlify.app/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Introdução ao framework {mlr3}</title>
+      <link>https://datamares.netlify.app/post/2020-11-29-introducao-ao-mlr3-framework/</link>
+      <pubDate>Sun, 27 Dec 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://datamares.netlify.app/post/2020-11-29-introducao-ao-mlr3-framework/</guid>
+      <description>
+        
+          
+&lt;script src=&#34;https://datamares.netlify.app/post/2020-11-29-introducao-ao-mlr3-framework/index_files/header-attrs/header-attrs.js&#34;&gt;&lt;/script&gt;
+
+
+&lt;p&gt;Esse é o primeiro post de uma série que irá tratar sobre o ecossistema {mlr3} &lt;span class=&#34;citation&#34;&gt;(&lt;a href=&#34;#ref-mlr3&#34; role=&#34;doc-biblioref&#34;&gt;Lang et al. 2019&lt;/a&gt;)&lt;/span&gt;. Ele é mais completo e também muito mais complexo do que seu predecessor, o {mlr}, que teve sua versão inicial publicada no CRAN em 2013. O ecossistema permite um framework agnóstico (i.e. não depende dos algoritmos escolhidos), extensível e orientado a objeto, e, atualmente, permite vários tipos de tarefas, como classificação, regressão, análise de sobrevivência, forecasting, clustering, dentre outros. O {mlr3} tem diversas vantagens que o faz, IMHO, o &lt;em&gt;framework&lt;/em&gt; mais completo para se trabalhar &lt;em&gt;machine learning&lt;/em&gt; em R &lt;span class=&#34;citation&#34;&gt;(&lt;a href=&#34;#ref-R&#34; role=&#34;doc-biblioref&#34;&gt;R Core Team 2020&lt;/a&gt;)&lt;/span&gt; e elas ficarão claras ao longo dos próximos posts.&lt;/p&gt;
+&lt;div id=&#34;introdução&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;INTRODUÇÃO&lt;/h1&gt;
+&lt;p&gt;O workflow padrão de um projeto de machine learning consiste em:&lt;/p&gt;
+&lt;ol style=&#34;list-style-type: decimal&#34;&gt;
+&lt;li&gt;dividir sua amostra em treino e teste (&lt;em&gt;split&lt;/em&gt;);&lt;/li&gt;
+&lt;li&gt;escolher o algoritmo&lt;a href=&#34;#fn1&#34; class=&#34;footnote-ref&#34; id=&#34;fnref1&#34;&gt;&lt;sup&gt;1&lt;/sup&gt;&lt;/a&gt; apropriado para o tipo de tarefa;&lt;/li&gt;
+&lt;li&gt;passar a amostra de treino ao algoritmo para criar um modelo do relacionamento entre a variável de resposta (&lt;em&gt;output features&lt;/em&gt;) e as explicativas (&lt;em&gt;input features&lt;/em&gt;);&lt;/li&gt;
+&lt;li&gt;passar os dados de testes ao modelo treinado para produzir predições;&lt;/li&gt;
+&lt;li&gt;comparar as predições com os dados da amostra;&lt;/li&gt;
+&lt;li&gt;mensurar a performance do modelo através de medidas de acurácia estabelecidas.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;img src=&#34;img/basics.svg&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;O processo de repetir esse workflow várias vezes, separando a amostra treino em várias partes diferentes e usando outras como &lt;em&gt;fake test samples&lt;/em&gt; é chamado de &lt;em&gt;resampling&lt;/em&gt;, um processo vital para a etapa de calibragem e para evitar o &lt;em&gt;overfitting&lt;/em&gt;.&lt;/p&gt;
+&lt;p&gt;Dependendo dos dados, do tipo de tarefa e algoritmo escolhido, podem ser necessários vários filtros, como normalização, &lt;em&gt;feature selection&lt;/em&gt; e tratamento de &lt;em&gt;outliers&lt;/em&gt; ou dados faltantes. Para esses casos, o {mlr3} tem novas soluções que se destacam com muita vantagem em relação não só ao seu predecessor {mlr} como também a outros &lt;em&gt;frameworks&lt;/em&gt; de &lt;em&gt;machine learning&lt;/em&gt; em R, como o {caret} e o {tidymodels}.&lt;/p&gt;
+&lt;div id=&#34;características-de-design&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;CARACTERÍSTICAS DE DESIGN&lt;/h2&gt;
+&lt;p&gt;Alguns princípios gerais que norteiam o desenvolvimento do pacote e afetam muito seu uso são:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Foco no &lt;em&gt;backend&lt;/em&gt;. A maioria dos pacotes do ecossistema tem objetivo de processar e transformar dados, aplicar algoritmos e computar resultados. Visualizações são providenciadas em pacotes externos;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Adoção da classe R6 &lt;span class=&#34;citation&#34;&gt;(&lt;a href=&#34;#ref-R-R6&#34; role=&#34;doc-biblioref&#34;&gt;Chang 2020&lt;/a&gt;)&lt;/span&gt; para design orientado a objeto, &lt;em&gt;modify-in-place&lt;/em&gt; e semântica de referência (falaremos um pouco sobre esses conceitos adiante);&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Adoção do {data.table} &lt;span class=&#34;citation&#34;&gt;(&lt;a href=&#34;#ref-R-data.table&#34; role=&#34;doc-biblioref&#34;&gt;Dowle and Srinivasan 2020&lt;/a&gt;)&lt;/span&gt; para manipulações de &lt;em&gt;data frames&lt;/em&gt;. A combinação {R6} + {data.table} torna a performance um dos pontos fortes do ecossistema.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Baixa dependência. Entretanto, os algortimos não são implementados no ecossistema, como no scikit-learn em Python. Para executar o XGBoost &lt;span class=&#34;citation&#34;&gt;(&lt;a href=&#34;#ref-xgboost&#34; role=&#34;doc-biblioref&#34;&gt;Chen et al. 2020&lt;/a&gt;)&lt;/span&gt;, por exemplo, deve-se ter instalado o pacote que o implementa.&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div id=&#34;fora-do-escopo&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;FORA DO ESCOPO&lt;/h2&gt;
+&lt;p&gt;Como se trata de uma introdução, as etapas de &lt;em&gt;tunning&lt;/em&gt; e &lt;em&gt;resampling&lt;/em&gt;, assim como funcionalidades como os &lt;em&gt;pipelines&lt;/em&gt;, serão abordadas em postagens futuras. Neste post trataremos apenas os conceitos básicos do &lt;em&gt;workflow&lt;/em&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div id=&#34;direto-ao-ponto&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;DIRETO AO PONTO&lt;/h1&gt;
+&lt;p&gt;Para conhecer as funcionalidades básicas do pacote, usaremos um dos &lt;em&gt;datasets&lt;/em&gt; inclusos no R, o &lt;code&gt;swiss&lt;/code&gt;. Esse &lt;em&gt;dataset&lt;/em&gt; consiste na medição padronizada da fertilidade e indicadores socioeconômicos de 47 províncias da Suíça em 1888.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-r&#34; data-lang=&#34;r&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;# criando dataframe&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;data&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;swiss&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;3&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;4&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;# overview&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;5&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;skimr&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;::&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;skim&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;data&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;table&gt;
+&lt;caption&gt;&lt;span id=&#34;tab:data&#34;&gt;Table 1: &lt;/span&gt;Data summary&lt;/caption&gt;
+&lt;tbody&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;Name&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;data&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;Number of rows&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;47&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;Number of columns&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;6&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;_______________________&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;Column type frequency:&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;numeric&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;6&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;________________________&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;Group variables&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;None&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;&lt;strong&gt;Variable type: numeric&lt;/strong&gt;&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr class=&#34;header&#34;&gt;
+&lt;th align=&#34;left&#34;&gt;skim_variable&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;n_missing&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;complete_rate&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;mean&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;sd&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;p0&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;p25&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;p50&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;p75&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;p100&lt;/th&gt;
+&lt;th align=&#34;left&#34;&gt;hist&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;Fertility&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;70.14&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;12.49&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;35.00&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;64.70&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;70.40&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;78.45&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;92.5&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;▂▂▇▇▅&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;Agriculture&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;50.66&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;22.71&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1.20&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;35.90&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;54.10&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;67.65&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;89.7&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;▃▃▆▇▅&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;Examination&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;16.49&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;7.98&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;3.00&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;12.00&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;16.00&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;22.00&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;37.0&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;▅▇▆▂▂&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;Education&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;10.98&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;9.62&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1.00&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;6.00&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;8.00&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;12.00&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;53.0&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;▇▃▁▁▁&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;Catholic&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;41.14&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;41.70&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;2.15&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;5.20&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;15.14&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;93.12&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;100.0&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;▇▁▁▁▅&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;Infant.Mortality&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;19.94&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;2.91&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;10.80&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;18.15&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;20.00&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;21.70&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;26.6&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;▁▂▇▆▂&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;Dentre as vari]]áveis disponíveis, podemos escolher modelar a mortalidade infantil &lt;code&gt;Infant.Mortality&lt;/code&gt; baseada nas demais features, que são:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;Fertility&lt;/code&gt;: Medida de fertilidade. Assim como a mortalidade infantil, está escalonada entre 0-100.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Agriculture&lt;/code&gt;: Percentual de homens envolvidos em agricultura como ocupação.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Examination&lt;/code&gt;: Percentual de alistados bem avaliados nos exames do exército.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Education&lt;/code&gt;: Percentual dos alistados com educação superior ao primário.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Catholic&lt;/code&gt;: Percentual de católicos (em oposto a protestantes).&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;O &lt;em&gt;workflow&lt;/em&gt; começa pela criação da &lt;code&gt;task&lt;/code&gt;, que é um objeto que contém os dados e informações sobre a tarefa a ser executada, como a variável de resposta&lt;a href=&#34;#fn2&#34; class=&#34;footnote-ref&#34; id=&#34;fnref2&#34;&gt;&lt;sup&gt;2&lt;/sup&gt;&lt;/a&gt; e as demais &lt;em&gt;features&lt;/em&gt;, além de seus tipos. Como queremos realizar predições para uma variável numérica contínua, é uma tarefa de regressão.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-r&#34; data-lang=&#34;r&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;# importando pacote&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;library&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;mlr3verse&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;3&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;4&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;# criando task&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;5&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;task_swiss&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;TaskRegr&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;$&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;new&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;6&lt;/span&gt;  &lt;span class=&#34;n&#34;&gt;id&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;swiss&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;7&lt;/span&gt;  &lt;span class=&#34;n&#34;&gt;backend&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;data&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;8&lt;/span&gt;  &lt;span class=&#34;n&#34;&gt;target&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;Infant.Mortality&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;9&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Notou algo estranho? Como o {mlr3} trabalha com a classe R6, seu manuseio é mais parecido com outras linguagens orientadas a objeto, como o Python. Essa classe tem duas propriedades especiais:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Métodos pertencem a objetos e são chamados na forma &lt;code&gt;objeto$metodo()&lt;/code&gt; e não como funções genéricas como &lt;code&gt;foo()&lt;/code&gt;. Esse é o paradigma OOP (programação orientada à objetos). No caso acima, não há uma função para criar uma &lt;em&gt;task&lt;/em&gt; como &lt;code&gt;task_regr_new()&lt;/code&gt;, mas um método &lt;code&gt;new()&lt;/code&gt; associado ao objeto &lt;code&gt;TaskRegr&lt;/code&gt;;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Os objetos da classe R6 são mutáveis, ou seja, eles são modificados no local (&lt;em&gt;modify-in-place&lt;/em&gt;) e, portanto, têm semântica de referência. Isso significa que eles não são copiados a cada modificação, como os &lt;em&gt;data frames&lt;/em&gt; comuns (classe S3), o que é um fator de alocação de memória e, consequentemente, lentidão.&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;O efeito colateral é que isso não é muito familiar para pessoas que não conhecem outras linguagens de programação além do R e no início pode parecer pouco natural e confuso.&lt;/p&gt;
+&lt;p&gt;Criado o objeto, podemos acessá-lo para verificar e visualizar as informações ali contidas:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-r&#34; data-lang=&#34;r&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;# verificando&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;task_swiss&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;3&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;4&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;# visualizando&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;5&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;autoplot&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;task_swiss&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;type&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;pairs&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;pre&gt;&lt;code&gt;## &amp;lt;TaskRegr:swiss&amp;gt; (47 x 6)
+## * Target: Infant.Mortality
+## * Properties: -
+## * Features (5):
+##   - dbl (3): Agriculture, Catholic, Fertility
+##   - int (2): Education, Examination&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;https://datamares.netlify.app/post/2020-11-29-introducao-ao-mlr3-framework/index_files/figure-html/task_cont-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;Podemos ver que apenas a fertilidade é linearmente correlacionada com a mortalidade infantil — quanto maior a fertilidade, maior a mortalidade —, e podemos esperar que tenha maior peso nas predições. As demais variáveis não apresentam correlação linear significativa com a variável de resposta. Entretanto, apresentam correlação moderada ou forte entre si, mas não a ponto de apresentar colinearidade, o que demandaria tratamento.&lt;/p&gt;
+&lt;p&gt;Agora selecionamos o algoritmo&lt;a href=&#34;#fn3&#34; class=&#34;footnote-ref&#34; id=&#34;fnref3&#34;&gt;&lt;sup&gt;3&lt;/sup&gt;&lt;/a&gt; que será usado para treinar o modelo. Escolhi aqui o &lt;em&gt;XGBoost&lt;/em&gt;. A lista completa pode ser acessada &lt;a href=&#34;https://mlr3extralearners.mlr-org.com/articles/learners/learner_status.html&#34;&gt;por essa lista estática&lt;/a&gt;, &lt;a href=&#34;https://mlr3extralearners.mlr-org.com/articles/learners/list_learners.html&#34;&gt;por essa lista dinâmica&lt;/a&gt; ou pela função &lt;code&gt;mlr3extralearners::list_mlr3learners()&lt;/code&gt;. Como mencionado anteriormente, os algoritmos não são implementados pelo ecossistema do {mlr3} e nas listas citadas constam os pacotes onde os algoritmos foram implementados e que devem ser baixados para o seu uso.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-r&#34; data-lang=&#34;r&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;# definindo o learner&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;l_xgboost&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;lrn&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;regr.xgboost&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;3&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;4&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;# checando&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;5&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;l_xgboost&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;pre&gt;&lt;code&gt;## &amp;lt;LearnerRegrXgboost:regr.xgboost&amp;gt;
+## * Model: -
+## * Parameters: nrounds=1, nthread=1, verbose=0
+## * Packages: xgboost
+## * Predict Type: response
+## * Feature types: logical, integer, numeric
+## * Properties: importance, missings, weights&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Vamos entender o que o objeto &lt;code&gt;l_xgboost&lt;/code&gt; nos diz.&lt;/p&gt;
+&lt;ol style=&#34;list-style-type: decimal&#34;&gt;
+&lt;li&gt;&lt;strong&gt;Model&lt;/strong&gt;: Vazio, pois ainda não há um modelo treinado;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Parameters&lt;/strong&gt;: Os hiperparâmetros a serem escolhidos e tunados para performance do modelo;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Packages&lt;/strong&gt;: O pacote onde o algorítmo foi implementado e de onde será importado pelo {mlr3};&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Predict Type&lt;/strong&gt;: Se &lt;code&gt;response&lt;/code&gt; a predição é retornada como 0 ou 1, no caso de classificação, ou num valor para variável de resposta, no caso de regressão — neste caso, será a mortalidade infantil escalonada no intervalo [1, 100]. Se “prob,” para classificação, a predição retorna a probabilidade entre 0 e 1;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Feature Type&lt;/strong&gt;: Os tipos de variáveis que o algoritmo é capaz de manipular. No caso do &lt;em&gt;XGBoost&lt;/em&gt;, por exemplo, apenas variáveis numéricas podem ser utilizadas. Isso quer dizer que os fatores devem ser convertidos em valores binários (i.e. 0 ou 1), ou seja, deve-se tornar a matriz esparsa — no caso de um fator &lt;code&gt;sexo&lt;/code&gt;, por exemplo, na fase de pre-processamento seriam criadas as colunas &lt;code&gt;sexo.masculino&lt;/code&gt;, com valores de 1 ou 0, e &lt;code&gt;sexo.feminino&lt;/code&gt;, também com 1 ou 0;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Properties&lt;/strong&gt;: Propriedades e capacidades adicionais do algoritmo. Neste caso, o &lt;strong&gt;XGBoost&lt;/strong&gt; possui a capacidade de computar e retornar os valores da importância das &lt;em&gt;features&lt;/em&gt; para o modelo; a capacidade de trabalhar com dados faltantes (&lt;em&gt;missings&lt;/em&gt;); a capacidade de computar e retornar os pesos associados às &lt;em&gt;features&lt;/em&gt;.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Como pode ver em &lt;em&gt;parameters&lt;/em&gt;, não há nenhum hiperparâmetro configurado. Podemos acessá-los da seguinte maneira:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-r&#34; data-lang=&#34;r&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;# acessando hiperparâmetros&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;head&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;as.data.table&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;l_xgboost&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;$&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;param_set&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;pre&gt;&lt;code&gt;##                  id    class lower upper               levels nlevels
+## 1:          booster ParamFct    NA    NA gbtree,gblinear,dart       3
+## 2:        watchlist ParamUty    NA    NA                          Inf
+## 3:              eta ParamDbl     0     1                          Inf
+## 4:            gamma ParamDbl     0   Inf                          Inf
+## 5:        max_depth ParamInt     0   Inf                          Inf
+## 6: min_child_weight ParamDbl     0   Inf                          Inf
+##    is_bounded special_vals default storage_type  tags
+## 1:       TRUE    &amp;lt;list[0]&amp;gt;  gbtree    character train
+## 2:      FALSE    &amp;lt;list[0]&amp;gt;                 list train
+## 3:       TRUE    &amp;lt;list[0]&amp;gt;     0.3      numeric train
+## 4:      FALSE    &amp;lt;list[0]&amp;gt;       0      numeric train
+## 5:      FALSE    &amp;lt;list[0]&amp;gt;       6      integer train
+## 6:      FALSE    &amp;lt;list[0]&amp;gt;       1      numeric train&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Como o &lt;em&gt;tunning&lt;/em&gt; de hiperparâmetros não é o assunto, vamos apenas configurar algumas coisas básicas para demonstrar como essas informações são acessadas e modificadas. O método para isso é o &lt;code&gt;param_set$values&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-r&#34; data-lang=&#34;r&#34;&gt;&lt;span class=&#34;ln&#34;&gt; 1&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;# hiperparâmetros&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 2&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;l_xgboost&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;$&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;param_set&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;$&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;values&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;list&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 3&lt;/span&gt;  &lt;span class=&#34;c1&#34;&gt;# mandando o algoritmo parar depois de 10 iterações sem melhora no score&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 4&lt;/span&gt;  &lt;span class=&#34;n&#34;&gt;early_stopping_rounds&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;10&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 5&lt;/span&gt;  &lt;span class=&#34;c1&#34;&gt;# mandando o algoritmo treinar mais lentamente&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 6&lt;/span&gt;  &lt;span class=&#34;n&#34;&gt;eta&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;0.1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 7&lt;/span&gt;  &lt;span class=&#34;c1&#34;&gt;# limitando profundidade da árvore&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 8&lt;/span&gt;  &lt;span class=&#34;n&#34;&gt;max_depth&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;5&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 9&lt;/span&gt;  &lt;span class=&#34;c1&#34;&gt;# quantidade máxima de iterações&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;10&lt;/span&gt;  &lt;span class=&#34;n&#34;&gt;nrounds&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;100&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;11&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;12&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;13&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;# verificando&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;14&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;l_xgboost&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;pre&gt;&lt;code&gt;## &amp;lt;LearnerRegrXgboost:regr.xgboost&amp;gt;
+## * Model: -
+## * Parameters: early_stopping_rounds=10, eta=0.1, max_depth=5,
+##   nrounds=100
+## * Packages: xgboost
+## * Predict Type: response
+## * Feature types: logical, integer, numeric
+## * Properties: importance, missings, weights&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;treino-e-predição&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;TREINO E PREDIÇÃO&lt;/h1&gt;
+&lt;p&gt;As próximas etapas são o treino e a predição — trataremos de &lt;em&gt;tunning&lt;/em&gt; e &lt;em&gt;resampling&lt;/em&gt; nos próximos posts. Primeiramente, o &lt;em&gt;split&lt;/em&gt; do dataset em treino e teste. Para isso, usaremos a função &lt;code&gt;sample()&lt;/code&gt; em dois métodos do objeto &lt;code&gt;task_swiss&lt;/code&gt;, o &lt;code&gt;row_ids&lt;/code&gt; e &lt;code&gt;nrow&lt;/code&gt;. O primeiro enumera os índices de cada linha:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-r&#34; data-lang=&#34;r&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;# método row_ids&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;task_swiss&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;$&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;row_ids&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;pre&gt;&lt;code&gt;##  [1]  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25
+## [26] 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Enquanto o segundo retorna a quantidade de linhas do dataset:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-r&#34; data-lang=&#34;r&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;# método row_ids&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;task_swiss&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;$&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;nrow&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 47&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Assim, podemos selecionar os índice do dataset em duas amostras aleatórias:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-r&#34; data-lang=&#34;r&#34;&gt;&lt;span class=&#34;ln&#34;&gt; 1&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;# garantindo reprodutibilidade&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 2&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;set.seed&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 3&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 4&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;# índices para amostra treino&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 5&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;train_set&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;sample&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;task_swiss&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;$&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;row_ids&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;0.7&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;*&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;task_swiss&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;$&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;nrow&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 6&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 7&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;# índices para amostra teste&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 8&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;test_set&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;setdiff&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;task_swiss&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;$&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;row_ids&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;train_set&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 9&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;10&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;# verificando&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;11&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;head&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;train_set&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;pre&gt;&lt;code&gt;## [1]  4 39  1 34 23 14&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Com os índices selecionados, podemos realizar nosso treino apenas nos 70% escolhidos aleatoriamente da amostra, sem copiar os dados e alocar memória desnecessariamente:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-r&#34; data-lang=&#34;r&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;# treino&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;l_xgboost&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;$&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;train&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;task_swiss&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;row_ids&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;train_set&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;3&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;4&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;# verificando&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;5&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;l_xgboost&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;$&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;model&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;pre&gt;&lt;code&gt;## [10:21:01] WARNING: amalgamation/../src/objective/regression_obj.cu:171: reg:linear is now deprecated in favor of reg:squarederror.
+## [1]  train-rmse:17.686886 
+## Will train until train_rmse hasn&amp;#39;t improved in 10 rounds.
+## 
+## [2]  train-rmse:16.014399 
+## [3]  train-rmse:14.506416 
+## [4]  train-rmse:13.147319 
+## [5]  train-rmse:11.924172 
+## [6]  train-rmse:10.822335 
+## [7]  train-rmse:9.832130 
+## [8]  train-rmse:8.940679 
+## [9]  train-rmse:8.136598 
+## [10] train-rmse:7.413037 
+## [11] train-rmse:6.760063 
+## [12] train-rmse:6.173677 
+## [13] train-rmse:5.647888 
+## [14] train-rmse:5.177068 
+## [15] train-rmse:4.751254 
+## [16] train-rmse:4.367561 
+## [17] train-rmse:4.022047 
+## [18] train-rmse:3.705540 
+## [19] train-rmse:3.421478 
+## [20] train-rmse:3.165364 
+## [21] train-rmse:2.923110 
+## [22] train-rmse:2.709535 
+## [23] train-rmse:2.511684 
+## [24] train-rmse:2.330560 
+## [25] train-rmse:2.162180 
+## [26] train-rmse:2.002988 
+## [27] train-rmse:1.861695 
+## [28] train-rmse:1.730979 
+## [29] train-rmse:1.614930 
+## [30] train-rmse:1.510077 
+## [31] train-rmse:1.405107 
+## [32] train-rmse:1.316820 
+## [33] train-rmse:1.227179 
+## [34] train-rmse:1.148336 
+## [35] train-rmse:1.074920 
+## [36] train-rmse:1.004666 
+## [37] train-rmse:0.940519 
+## [38] train-rmse:0.886334 
+## [39] train-rmse:0.832195 
+## [40] train-rmse:0.782907 
+## [41] train-rmse:0.737985 
+## [42] train-rmse:0.695803 
+## [43] train-rmse:0.658468 
+## [44] train-rmse:0.620991 
+## [45] train-rmse:0.584939 
+## [46] train-rmse:0.551442 
+## [47] train-rmse:0.520346 
+## [48] train-rmse:0.491411 
+## [49] train-rmse:0.464267 
+## [50] train-rmse:0.438681 
+## [51] train-rmse:0.414958 
+## [52] train-rmse:0.391905 
+## [53] train-rmse:0.369801 
+## [54] train-rmse:0.350035 
+## [55] train-rmse:0.330991 
+## [56] train-rmse:0.313710 
+## [57] train-rmse:0.296662 
+## [58] train-rmse:0.280962 
+## [59] train-rmse:0.266252 
+## [60] train-rmse:0.253146 
+## [61] train-rmse:0.240702 
+## [62] train-rmse:0.229117 
+## [63] train-rmse:0.217732 
+## [64] train-rmse:0.205889 
+## [65] train-rmse:0.195538 
+## [66] train-rmse:0.186375 
+## [67] train-rmse:0.176608 
+## [68] train-rmse:0.168004 
+## [69] train-rmse:0.160256 
+## [70] train-rmse:0.151921 
+## [71] train-rmse:0.144080 
+## [72] train-rmse:0.136428 
+## [73] train-rmse:0.130172 
+## [74] train-rmse:0.123807 
+## [75] train-rmse:0.117861 
+## [76] train-rmse:0.112243 
+## [77] train-rmse:0.106818 
+## [78] train-rmse:0.101794 
+## [79] train-rmse:0.096382 
+## [80] train-rmse:0.091913 
+## [81] train-rmse:0.087061 
+## [82] train-rmse:0.082908 
+## [83] train-rmse:0.079150 
+## [84] train-rmse:0.075045 
+## [85] train-rmse:0.071658 
+## [86] train-rmse:0.067890 
+## [87] train-rmse:0.064352 
+## [88] train-rmse:0.061335 
+## [89] train-rmse:0.058158 
+## [90] train-rmse:0.055464 
+## [91] train-rmse:0.052609 
+## [92] train-rmse:0.049872 
+## [93] train-rmse:0.047326 
+## [94] train-rmse:0.045157 
+## [95] train-rmse:0.042823 
+## [96] train-rmse:0.040716 
+## [97] train-rmse:0.038909 
+## [98] train-rmse:0.036942 
+## [99] train-rmse:0.035096 
+## [100]    train-rmse:0.033438&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## ##### xgb.Booster
+## raw: 156.2 Kb 
+## call:
+##   xgboost::xgb.train(data = data, nrounds = 100L, watchlist = list(
+##     train = &amp;lt;pointer: 0x000000001ca3f8a0&amp;gt;), early_stopping_rounds = 10L, 
+##     eta = 0.1, max_depth = 5L, objective = &amp;quot;reg:linear&amp;quot;)
+## params (as set within xgb.train):
+##   eta = &amp;quot;0.1&amp;quot;, max_depth = &amp;quot;5&amp;quot;, objective = &amp;quot;reg:linear&amp;quot;, validate_parameters = &amp;quot;TRUE&amp;quot;
+## xgb.attributes:
+##   best_iteration, best_msg, best_ntreelimit, best_score, niter
+## callbacks:
+##   cb.print.evaluation(period = print_every_n)
+##   cb.evaluation.log()
+##   cb.early.stop(stopping_rounds = early_stopping_rounds, maximize = maximize, 
+##     verbose = verbose)
+## # of features: 5 
+## niter: 100
+## best_iteration : 100 
+## best_ntreelimit : 100 
+## best_score : 0.033438 
+## best_msg : [100] train-rmse:0.033438 
+## nfeatures : 5 
+## evaluation_log:
+##     iter train_rmse
+##        1  17.686886
+##        2  16.014399
+## ---                
+##       99   0.035096
+##      100   0.033438&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Como podemos ver, na primeira iteração o modelo obteve &lt;em&gt;rmse&lt;/em&gt;&lt;a href=&#34;#fn4&#34; class=&#34;footnote-ref&#34; id=&#34;fnref4&#34;&gt;&lt;sup&gt;4&lt;/sup&gt;&lt;/a&gt;. de 17.7, o que é alto considerando a escala [1-100] da mortalidade infantil. Ao longo do treino, o erro foi reduzido até 0.03, o que não significa que sua performance permaneça nesse nível quando extrapolado para a amostra teste ou novos dados, mas é um bom sinal. O esperado é que a performance real do modelo, após ser aplicado à amostra teste, fique entre a iteração inicial e final. Se ficar &lt;em&gt;melhor&lt;/em&gt; do que a performance do teste, alguma coisa certamente está errada.&lt;/p&gt;
+&lt;p&gt;Vamos verificar qual a performance real após realizarmos as predições na amostra teste. Primeiro, passamos os índices de teste ao objeto do &lt;em&gt;learner&lt;/em&gt; com o modelo e chamamos o método &lt;code&gt;predict()&lt;/code&gt; para obter as predições.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-r&#34; data-lang=&#34;r&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;# predições&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;preds&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;l_xgboost&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;$&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;predict&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;task_swiss&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;row_ids&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;test_set&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;3&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;4&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;# verificando&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;5&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;preds&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;pre&gt;&lt;code&gt;## &amp;lt;PredictionRegr&amp;gt; for 15 observations:
+##     row_ids truth response
+##           8  24.9 20.69299
+##          11  24.5 20.65381
+##          13  19.1 15.63718
+## ---                       
+##          40  20.5 19.55373
+##          43  20.0 21.27585
+##          47  19.3 21.82050&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;No objeto com as predições, são armazenados tanto os valores preditos pelo modelo &lt;code&gt;response&lt;/code&gt; quanto os valores da amostra &lt;code&gt;truth&lt;/code&gt;. Esses valores então podem ser comparados para calcular a acurácia do modelo através do método &lt;code&gt;score()&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-r&#34; data-lang=&#34;r&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;# acurácia&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;preds&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;$&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;score&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;list&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;3&lt;/span&gt;  &lt;span class=&#34;nf&#34;&gt;msr&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;regr.rmse&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;),&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;4&lt;/span&gt;  &lt;span class=&#34;nf&#34;&gt;msr&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;regr.mae&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;5&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;6&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;7&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;# visualizando&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;8&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;autoplot&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;preds&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;pre&gt;&lt;code&gt;## regr.rmse  regr.mae 
+##  2.587082  2.214177&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## `geom_smooth()` using formula &amp;#39;y ~ x&amp;#39;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;https://datamares.netlify.app/post/2020-11-29-introducao-ao-mlr3-framework/index_files/figure-html/accuracy-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;A &lt;em&gt;rmse&lt;/em&gt; do modelo na amostra teste ficou em apenas 2.59 unidades, o que é uma performance muito boa!&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;interpretação&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;INTERPRETAÇÃO&lt;/h1&gt;
+&lt;p&gt;Como o XGBoost possui a propriedade de &lt;em&gt;feature importance&lt;/em&gt;, podemos extraí-la com o método &lt;code&gt;importance()&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-r&#34; data-lang=&#34;r&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;# feature importance&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;l_xgboost&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;$&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;importance&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;3&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;4&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;# visualizando&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;5&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;barplot&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;l_xgboost&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;$&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;importance&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;())&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;pre&gt;&lt;code&gt;##    Catholic Agriculture   Fertility Examination   Education 
+##  0.39696784  0.24723198  0.20219343  0.10340228  0.05020448&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;https://datamares.netlify.app/post/2020-11-29-introducao-ao-mlr3-framework/index_files/figure-html/importance-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;Entretanto, somente a importância não nos descreve o relacionamento da &lt;em&gt;feature&lt;/em&gt; com a variável de resposta, nem mesmo sua direção, sendo uma medida muito pobre de interpretação. Discutiremos técnicas de interpretação em outras postagens.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;citação&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;CITAÇÃO&lt;/h1&gt;
+&lt;p&gt;Para citar esse post, use:
+
+&lt;p&gt;Alberson Miranda. Dec 27, 2020. &lt;em&gt;&#34;Introdução ao framework {mlr3}&#34;&lt;/em&gt;. https://datamares.netlify.app/post/2020-11-29-introducao-ao-mlr3-framework/.&lt;/p&gt;
+
+&lt;p&gt;Ou a entrada em BibTex:&lt;/p&gt;
+
+&lt;code&gt;&lt;pre&gt;
+  @misc&amp;#123;datamares,
+    title = {Introdução ao framework {mlr3}},
+    author = {Alberson Miranda},
+    year = {2020},
+    url = {https://datamares.netlify.app/post/2020-11-29-introducao-ao-mlr3-framework/}
+  &amp;#125;
+&lt;/pre&gt;&lt;/code&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;referências&#34; class=&#34;section level1 unnumbered&#34;&gt;
+&lt;h1&gt;REFERÊNCIAS&lt;/h1&gt;
+&lt;div id=&#34;refs&#34; class=&#34;references csl-bib-body hanging-indent&#34;&gt;
+&lt;div id=&#34;ref-R-R6&#34; class=&#34;csl-entry&#34;&gt;
+Chang, Winston. 2020. &lt;em&gt;R6: Encapsulated Classes with Reference Semantics&lt;/em&gt;. &lt;a href=&#34;https://CRAN.R-project.org/package=R6&#34;&gt;https://CRAN.R-project.org/package=R6&lt;/a&gt;.
+&lt;/div&gt;
+&lt;div id=&#34;ref-xgboost&#34; class=&#34;csl-entry&#34;&gt;
+Chen, Tianqi, Tong He, Michael Benesty, Vadim Khotilovich, Yuan Tang, Hyunsu Cho, Kailong Chen, et al. 2020. &lt;em&gt;Xgboost: Extreme Gradient Boosting&lt;/em&gt;. &lt;a href=&#34;https://CRAN.R-project.org/package=xgboost&#34;&gt;https://CRAN.R-project.org/package=xgboost&lt;/a&gt;.
+&lt;/div&gt;
+&lt;div id=&#34;ref-R-data.table&#34; class=&#34;csl-entry&#34;&gt;
+Dowle, Matt, and Arun Srinivasan. 2020. &lt;em&gt;Data.table: Extension of ‘Data.frame‘&lt;/em&gt;. &lt;a href=&#34;https://CRAN.R-project.org/package=data.table&#34;&gt;https://CRAN.R-project.org/package=data.table&lt;/a&gt;.
+&lt;/div&gt;
+&lt;div id=&#34;ref-mlr3&#34; class=&#34;csl-entry&#34;&gt;
+Lang, Michel, Martin Binder, Jakob Richter, Patrick Schratz, Florian Pfisterer, Stefan Coors, Quay Au, Giuseppe Casalicchio, Lars Kotthoff, and Bernd Bischl. 2019. &lt;span&gt;“&lt;span class=&#34;nocase&#34;&gt;mlr3&lt;/span&gt;: A Modern Object-Oriented Machine Learning Framework in &lt;span&gt;R&lt;/span&gt;.”&lt;/span&gt; &lt;em&gt;Journal of Open Source Software&lt;/em&gt;, December. &lt;a href=&#34;https://doi.org/10.21105/joss.01903&#34;&gt;https://doi.org/10.21105/joss.01903&lt;/a&gt;.
+&lt;/div&gt;
+&lt;div id=&#34;ref-R&#34; class=&#34;csl-entry&#34;&gt;
+R Core Team. 2020. &lt;em&gt;R: A Language and Environment for Statistical Computing&lt;/em&gt;. Vienna, Austria: R Foundation for Statistical Computing. &lt;a href=&#34;https://www.R-project.org/&#34;&gt;https://www.R-project.org/&lt;/a&gt;.
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;footnotes&#34;&gt;
+&lt;hr /&gt;
+&lt;ol&gt;
+&lt;li id=&#34;fn1&#34;&gt;&lt;p&gt;No {mlr3} é chamado de &lt;em&gt;learner&lt;/em&gt;.&lt;a href=&#34;#fnref1&#34; class=&#34;footnote-back&#34;&gt;↩︎&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li id=&#34;fn2&#34;&gt;&lt;p&gt;Também chamada de &lt;em&gt;output feature&lt;/em&gt; ou &lt;em&gt;label&lt;/em&gt;.&lt;a href=&#34;#fnref2&#34; class=&#34;footnote-back&#34;&gt;↩︎&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li id=&#34;fn3&#34;&gt;&lt;p&gt;Aqui trabalharemos apenas com um, mas em posts futuros utilizaremos de diversas formas — pipelines com diferentes &lt;em&gt;features&lt;/em&gt;, &lt;em&gt;stacking&lt;/em&gt; etc.&lt;a href=&#34;#fnref3&#34; class=&#34;footnote-back&#34;&gt;↩︎&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li id=&#34;fn4&#34;&gt;&lt;p&gt;Raiz do Erro Médio Quadrático&lt;a href=&#34;#fnref4&#34; class=&#34;footnote-back&#34;&gt;↩︎&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;
+
+        
+      </description>
+    </item>
+    
+    <item>
+      <title>Configurando git em um servidor proxy</title>
+      <link>https://datamares.netlify.app/post/configurando-git-em-um-servidor-proxy/</link>
+      <pubDate>Fri, 25 Sep 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://datamares.netlify.app/post/configurando-git-em-um-servidor-proxy/</guid>
+      <description>
+        
+          
+&lt;script src=&#34;https://datamares.netlify.app/post/configurando-git-em-um-servidor-proxy/index_files/header-attrs/header-attrs.js&#34;&gt;&lt;/script&gt;
+
+
+&lt;p&gt;Se você estiver trabalhando em uma organização que leva a sério a segurança da informação, então, provavelmente, você está atrás de um servidor proxy e com dificuldades para usar o Git. Para resolvermos isso, precisaremos de passar por 3 etapas:&lt;/p&gt;
+&lt;ol style=&#34;list-style-type: decimal&#34;&gt;
+&lt;li&gt;descobrir o endereço do servidor proxy&lt;/li&gt;
+&lt;li&gt;escolher um método de autenticação&lt;/li&gt;
+&lt;li&gt;atualizar as configurações do git&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div id=&#34;endereço-proxy&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;ENDEREÇO PROXY&lt;/h1&gt;
+&lt;p&gt;O endereço do servidor proxy fica salvo em um arquivo de configuração que pode ser obtido via navegador. Se você estiver no Windows, terá de acessar o famigerado Internet Explorer, ir em &lt;code&gt;Opções da Internet&lt;/code&gt;, &lt;code&gt;Conexões&lt;/code&gt; e &lt;code&gt;Configurações da Lan&lt;/code&gt;.&lt;/p&gt;
+&lt;div class=&#34;figure&#34;&gt;
+&lt;img src=&#34;images/1.png&#34; alt=&#34;&#34; /&gt;
+&lt;p class=&#34;caption&#34;&gt;localização do arquivo de configuração&lt;/p&gt;
+&lt;/div&gt;
+&lt;p&gt;Copie e cole o caminho exibido no campo &lt;code&gt;Endereço&lt;/code&gt; no navegador e você irá baixar um arquivo .dat com as configurações de proxy. Abra o arquivo em algum leitor&lt;a href=&#34;#fn1&#34; class=&#34;footnote-ref&#34; id=&#34;fnref1&#34;&gt;&lt;sup&gt;1&lt;/sup&gt;&lt;/a&gt;. No arquivo, busque por “PROXY”, essa variável conterá o endereço do servidor proxy no formato &lt;code&gt;dominio.com:porta&lt;/code&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;escolher-o-método-de-autenticação&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;ESCOLHER O MÉTODO DE AUTENTICAÇÃO&lt;/h1&gt;
+&lt;p&gt;Com o endereço proxy em mãos, precisamos escolher como vamos nos autenticar:&lt;br /&gt;
+&lt;br /&gt;
+1. Digitar a senha a cada push/pull&lt;br /&gt;
+2. Salvar a senha no .gitconfig&lt;br /&gt;
+&lt;/p&gt;
+&lt;p&gt;O primeiro método se aplica quando temos preocupação com nossa senha, ou seja, quando o computador é compartilhado ou a configuração é salva em rede, por exemplo.&lt;/p&gt;
+&lt;p&gt;Quando esse não é o caso, pode-se simplesmente salvar o usuário e senha no arquivo de configuração e o push/pull ocorrerá diretamente.&lt;/p&gt;
+&lt;div id=&#34;º-.gitconfig-sem-salvar-senha&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;1º .gitconfig sem salvar senha&lt;/h2&gt;
+&lt;p&gt;Recomendo usar o pacote {usethis} para alterar qualquer arquivo de configuração no R. Para a primeira opção, faríamos da seguinte maneira:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-r&#34; data-lang=&#34;r&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;# abrir o arquivo de configuração&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;usethis&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;::&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;edit_git_config&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Na janela do .gitconfig que será aberta, adicione as seguintes linhas:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;[http]
+    proxy = http[s]://dominio.com:porta
+
+[credential]
+    helper = wincred
+
+[credential &amp;quot;helperselector&amp;quot;]
+    selected = manager
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Em que “domínio.com” é o endereço proxy que você achou no arquivo .dat e as demais configurações definem a forma como você será solicitado a incluir usuário e senha, nesse caso através de uma janela pop up a cada push/pull.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;º-.gitconfig-com-senha-gravada&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;2º .gitconfig com senha gravada&lt;/h2&gt;
+&lt;p&gt;A outra alternativa é gravar o usuário e senha no próprio .gitconfig. Novamente, se o arquivo ficar em rede ou se outras pessoas tiverem acesso à máquina, evite essa opção. Para deixar seu usuário e senha salvas no .gitconfig, basta adicioná-los antes do domínio. A vantagem desse método a não ter de inserir as informações a cada push/pull.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;[http]
+    proxy = http[s]://usuario:senha@dominio.com:porta
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Lembre-se de atualizar a senha no .gitconfig sempre que ela for alterada!&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;footnotes&#34;&gt;
+&lt;hr /&gt;
+&lt;ol&gt;
+&lt;li id=&#34;fn1&#34;&gt;&lt;p&gt;Evite o bloco de notas para exibir corretamente as quebras de linha. Sugiro o Wordpad.&lt;a href=&#34;#fnref1&#34; class=&#34;footnote-back&#34;&gt;↩︎&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;
+
+        
+      </description>
+    </item>
+    
+    <item>
+      <title>Hello World!</title>
+      <link>https://datamares.netlify.app/post/hello-world/</link>
+      <pubDate>Fri, 11 Sep 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://datamares.netlify.app/post/hello-world/</guid>
+      <description>
+        
+          
+&lt;script src=&#34;https://datamares.netlify.app/post/hello-world/index_files/header-attrs/header-attrs.js&#34;&gt;&lt;/script&gt;
+
+
+&lt;p&gt;Depois de uma ou outra postagem no LinkedIn e Kaggle, já era hora de eu montar meu próprio blog para ciência de dados, não é mesmo?&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;First things first&lt;/em&gt;, que nome é esse? &lt;strong&gt;Datamares &amp;amp; Dreamscapes&lt;/strong&gt; faz referência ao título de uma coletânea de contos do Stephen King &lt;em&gt;Nightmares &amp;amp; Dreamscapes&lt;/em&gt; (Pesadelos e Paisagens Noturnas, no Brasil) e faz bastante jus à minha relação com esse mundo. Vindo de um background de business não muito intensivo em matemática, estatística e dados (vou abordar isso em uma postagem), o aprendizado autodidata envolve certos sacrifícios e noites perdidas ou mal dormidas. Entretanto, quando você consegue aquele resultado esperado é como se um portal se abrisse para um novo mundo.&lt;/p&gt;
+&lt;p&gt;Então, sobre o que pretendo falar por aqui? Principalmente acerca dos projetos em R nos quais estiver trabalhando, machine learning, estatística clássica, forecasting, frameworks… e um pouco de matemática, economia e ensino. Basicamente ideias, insights e trabalhos que devo consultar vez ou outra.&lt;/p&gt;
+&lt;p&gt;E se alguma dessas coisas te ajudar de alguma forma, eu vou ficar bastante feliz :p&lt;/p&gt;
+
+        
+      </description>
+    </item>
+    
+  </channel>
+</rss>

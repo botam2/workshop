@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Git on Datamares &amp; Dreamscapes</title>
+    <link>https://datamares.netlify.app/tags/git/</link>
+    <description>Recent content in Git on Datamares &amp; Dreamscapes</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <copyright>Copyright © 2021, Alberson Miranda; all rights reserved.</copyright>
+    <lastBuildDate>Fri, 25 Sep 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://datamares.netlify.app/tags/git/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Configurando git em um servidor proxy</title>
+      <link>https://datamares.netlify.app/post/configurando-git-em-um-servidor-proxy/</link>
+      <pubDate>Fri, 25 Sep 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://datamares.netlify.app/post/configurando-git-em-um-servidor-proxy/</guid>
+      <description>
+        
+          
+&lt;script src=&#34;https://datamares.netlify.app/post/configurando-git-em-um-servidor-proxy/index_files/header-attrs/header-attrs.js&#34;&gt;&lt;/script&gt;
+
+
+&lt;p&gt;Se você estiver trabalhando em uma organização que leva a sério a segurança da informação, então, provavelmente, você está atrás de um servidor proxy e com dificuldades para usar o Git. Para resolvermos isso, precisaremos de passar por 3 etapas:&lt;/p&gt;
+&lt;ol style=&#34;list-style-type: decimal&#34;&gt;
+&lt;li&gt;descobrir o endereço do servidor proxy&lt;/li&gt;
+&lt;li&gt;escolher um método de autenticação&lt;/li&gt;
+&lt;li&gt;atualizar as configurações do git&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div id=&#34;endereço-proxy&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;ENDEREÇO PROXY&lt;/h1&gt;
+&lt;p&gt;O endereço do servidor proxy fica salvo em um arquivo de configuração que pode ser obtido via navegador. Se você estiver no Windows, terá de acessar o famigerado Internet Explorer, ir em &lt;code&gt;Opções da Internet&lt;/code&gt;, &lt;code&gt;Conexões&lt;/code&gt; e &lt;code&gt;Configurações da Lan&lt;/code&gt;.&lt;/p&gt;
+&lt;div class=&#34;figure&#34;&gt;
+&lt;img src=&#34;images/1.png&#34; alt=&#34;&#34; /&gt;
+&lt;p class=&#34;caption&#34;&gt;localização do arquivo de configuração&lt;/p&gt;
+&lt;/div&gt;
+&lt;p&gt;Copie e cole o caminho exibido no campo &lt;code&gt;Endereço&lt;/code&gt; no navegador e você irá baixar um arquivo .dat com as configurações de proxy. Abra o arquivo em algum leitor&lt;a href=&#34;#fn1&#34; class=&#34;footnote-ref&#34; id=&#34;fnref1&#34;&gt;&lt;sup&gt;1&lt;/sup&gt;&lt;/a&gt;. No arquivo, busque por “PROXY”, essa variável conterá o endereço do servidor proxy no formato &lt;code&gt;dominio.com:porta&lt;/code&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;escolher-o-método-de-autenticação&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;ESCOLHER O MÉTODO DE AUTENTICAÇÃO&lt;/h1&gt;
+&lt;p&gt;Com o endereço proxy em mãos, precisamos escolher como vamos nos autenticar:&lt;br /&gt;
+&lt;br /&gt;
+1. Digitar a senha a cada push/pull&lt;br /&gt;
+2. Salvar a senha no .gitconfig&lt;br /&gt;
+&lt;/p&gt;
+&lt;p&gt;O primeiro método se aplica quando temos preocupação com nossa senha, ou seja, quando o computador é compartilhado ou a configuração é salva em rede, por exemplo.&lt;/p&gt;
+&lt;p&gt;Quando esse não é o caso, pode-se simplesmente salvar o usuário e senha no arquivo de configuração e o push/pull ocorrerá diretamente.&lt;/p&gt;
+&lt;div id=&#34;º-.gitconfig-sem-salvar-senha&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;1º .gitconfig sem salvar senha&lt;/h2&gt;
+&lt;p&gt;Recomendo usar o pacote {usethis} para alterar qualquer arquivo de configuração no R. Para a primeira opção, faríamos da seguinte maneira:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-r&#34; data-lang=&#34;r&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;# abrir o arquivo de configuração&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;usethis&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;::&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;edit_git_config&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Na janela do .gitconfig que será aberta, adicione as seguintes linhas:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;[http]
+    proxy = http[s]://dominio.com:porta
+
+[credential]
+    helper = wincred
+
+[credential &amp;quot;helperselector&amp;quot;]
+    selected = manager
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Em que “domínio.com” é o endereço proxy que você achou no arquivo .dat e as demais configurações definem a forma como você será solicitado a incluir usuário e senha, nesse caso através de uma janela pop up a cada push/pull.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;º-.gitconfig-com-senha-gravada&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;2º .gitconfig com senha gravada&lt;/h2&gt;
+&lt;p&gt;A outra alternativa é gravar o usuário e senha no próprio .gitconfig. Novamente, se o arquivo ficar em rede ou se outras pessoas tiverem acesso à máquina, evite essa opção. Para deixar seu usuário e senha salvas no .gitconfig, basta adicioná-los antes do domínio. A vantagem desse método a não ter de inserir as informações a cada push/pull.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;[http]
+    proxy = http[s]://usuario:senha@dominio.com:porta
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Lembre-se de atualizar a senha no .gitconfig sempre que ela for alterada!&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;footnotes&#34;&gt;
+&lt;hr /&gt;
+&lt;ol&gt;
+&lt;li id=&#34;fn1&#34;&gt;&lt;p&gt;Evite o bloco de notas para exibir corretamente as quebras de linha. Sugiro o Wordpad.&lt;a href=&#34;#fnref1&#34; class=&#34;footnote-back&#34;&gt;↩︎&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;
+
+        
+      </description>
+    </item>
+    
+  </channel>
+</rss>
