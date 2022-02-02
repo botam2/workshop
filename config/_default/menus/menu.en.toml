@@ -1,12 +1,17 @@
 [[main]]
   name = "Home"
   url = "/"
-  weight = -110
+  weight = -111
 
 [[main]]
   name = "Installation"
   url = "installation/"
-  weight = -109
+  weight = -110
+  
+[[main]]
+  name = "Demos"
+  url = "demo/"
+  weight = -109  
 
 # Submenus are done this way: parent -> identifier
 [[main]]
@@ -47,14 +52,7 @@
   name = "instagram"
   weight = 3
   url = "https://www.instagram.com/alberson.miranda/"
-[[social]]
-  name = "stackoverflow"
-  weight = 3
-  url = "https://stackoverflow.com/users/8430277/alberson-miranda"
-[[social]]
-  name = "gitlab"
-  weight = 3
-  url = "https://gitlab.com/albersonmiranda"
+
 #[[social]]
 #  name = "rss"
 #  weight = 4
