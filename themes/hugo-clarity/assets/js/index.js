@@ -1,3 +1,4 @@
+const pageHasLoaded = 'DOMContentLoaded';
 (function toggleColorModes(){
   const light = 'lit';
   const dark = 'dim';
@@ -5,19 +6,19 @@
   const key = '--color-mode';
   const data = 'data-mode';
   const bank = window.localStorage;
-
+  
   function currentMode() {
     let acceptableChars = light + dark;
     acceptableChars = [...acceptableChars];
     let mode = getComputedStyle(doc).getPropertyValue(key).replace(/\"/g, '').trim();
-
+    
     mode = [...mode].filter(function(letter){
       return acceptableChars.includes(letter);
     });
-
+    
     return mode.join('');
   }
-
+  
   function changeMode(isDarkMode) {
     if(isDarkMode) {
       bank.setItem(storageKey, light)
@@ -27,7 +28,7 @@
       elemAttribute(doc, data, dark);
     }
   }
-
+  
   function setUserColorMode(mode = false) {
     const isDarkMode = currentMode() == dark;
     const storedMode = bank.getItem(storageKey);
@@ -39,13 +40,13 @@
       }
     } else {
       if(mode === true) {
-        changeMode(isDarkMode)
+        changeMode(isDarkMode) 
       }
     }
   }
-
+  
   setUserColorMode();
-
+  
   doc.addEventListener('click', function(event) {
     let target = event.target;
     let modeClass = 'color_choice';
@@ -59,14 +60,14 @@
 })();
 
 function fileClosure(){
-
+  
   (function updateDate() {
     const date = new Date();
     const year = date.getFullYear();
     const yearEl = elem('.year');
     yearEl ? yearEl.innerHTML = `${year}` : false;
   })();
-
+  
   (function makeExternalLinks(){
     let links = elems('a');
     if(links) {
@@ -80,20 +81,20 @@ function fileClosure(){
           blank = '_blank';
           noopener = 'noopener';
           attr1 = elemAttribute(link, target);
-          attr2 = elemAttribute(link, rel);
-
+          attr2 = elemAttribute(link, noopener);
+          
           attr1 ? false : elemAttribute(link, target, blank);
           attr2 ? false : elemAttribute(link, rel, noopener);
         }
       });
     }
   })();
-
+  
   let headingNodes = [], results, link, icon, current, id,
   tags = ['h2', 'h3', 'h4', 'h5', 'h6'];
-
+  
   current = document.URL;
-
+  
   tags.forEach(function(tag){
     const article = elem('.post_content');
     if (article) {
@@ -101,7 +102,7 @@ function fileClosure(){
       Array.prototype.push.apply(headingNodes, results);
     }
   });
-
+  
   headingNodes.forEach(function(node){
     link = createEl('a');
     loadSvg('link', link);
@@ -113,7 +114,7 @@ function fileClosure(){
       pushClass(node, 'link_owner');
     }
   });
-
+  
   let inlineListItems = elems('ol li');
   if(inlineListItems) {
     inlineListItems.forEach(function(listItem){
@@ -122,7 +123,7 @@ function fileClosure(){
       containsHeading ? pushClass(listItem, 'align') : false;
     })
   }
-
+  
   function copyFeedback(parent) {
     const copyText = document.createElement('div');
     const yanked = 'link_yanked';
@@ -130,12 +131,12 @@ function fileClosure(){
     copyText.innerText = 'Link Copied';
     if(!elem(`.${yanked}`, parent)) {
       parent.appendChild(copyText);
-      setTimeout(function() {
+      setTimeout(function() { 
         parent.removeChild(copyText)
       }, 3000);
     }
   }
-
+  
   (function copyHeadingLink() {
     let deeplink, deeplinks, newLink, parent, target;
     deeplink = 'link';
@@ -154,7 +155,7 @@ function fileClosure(){
       });
     }
   })();
-
+  
   (function copyLinkToShare() {
     let  copy, copied, excerpt, isCopyIcon, isInExcerpt, link, postCopy, postLink, target;
     copy = 'copy';
@@ -162,7 +163,7 @@ function fileClosure(){
     excerpt = 'excerpt';
     postCopy = 'post_copy';
     postLink = 'post_card';
-
+    
     doc.addEventListener('click', function(event) {
       target = event.target;
       isCopyIcon = containsClass(target, copy);
@@ -184,7 +185,7 @@ function fileClosure(){
       const yankLink = '.link_yank';
       const isCopyLink = target.matches(yankLink);
       const isCopyLinkIcon = target.closest(yankLink);
-
+      
       if(isCopyLink || isCopyLinkIcon) {
         event.preventDefault();
         const yankContent = isCopyLinkIcon ? elemAttribute(target.closest(yankLink), 'href') : elemAttribute(target, 'href');
@@ -193,7 +194,7 @@ function fileClosure(){
       }
     });
   })();
-
+  
   (function hideAside(){
     let aside, title, posts;
     aside = elem('.aside');
@@ -203,7 +204,7 @@ function fileClosure(){
       posts.length < 1 ? title.remove() : false;
     }
   })();
-
+  
   (function goBack() {
     let backBtn = elem('.btn_back');
     let history = window.history;
@@ -213,90 +214,86 @@ function fileClosure(){
       });
     }
   })();
-
+  
   function showingImagePosition(){
     // whether or not to track image position for non-linear images within the article body element.
     const thisPage = document.documentElement;
     let showImagePositionOnPage = thisPage.dataset.figures;
-
+    
     if(showImagePositionOnPage) {
       showImagePosition = showImagePositionOnPage;
     }
     return showImagePosition === "true" ? true : false;
   }
-
+  
   function populateAlt(images) {
-    let imagePosition = containsClass(images[0], featuredImageClass) ? -1 : 0;
-
+    let imagePosition = 0;
+    
     images.forEach((image) => {
       let alt = image.alt;
-      const figure = image.parentNode.parentNode;
-
-      // Image classes, including ::round
+      image.loading = "lazy";
+      const modifiers = [':left', ':right'];
       const altArr = alt.split('::').map(x => x.trim())
+      
       if (altArr.length > 1) {
         altArr[1].split(' ').filter(Boolean).forEach(cls =>{
           pushClass(image, cls);
           alt = altArr[0]
         })
       }
-
-      // Image alignment (floating)
-      const modifiers = [':left', ':right'];
+      
       modifiers.forEach(function(modifier){
         const canModify = alt.includes(modifier);
         if(canModify) {
-          pushClass(figure, `float_${modifier.replace(":", "")}`);
+          pushClass(image, `float_${modifier.replace(":", "")}`);
           alt = alt.replace(modifier, "");
         }
       });
-
-      // Inline images
-      const isInline = alt.includes(":inline");
-      alt = alt.replace(":inline", "");
-      if(isInline) {
-        modifyClass(figure, 'inline');
-      }
-
-      // Figure numbering
-      let captionText = image.title.trim().length ? image.title.trim() : alt;
-
-      if (captionText.length && !containsClass(image, 'alt' && !isInline)) {
+      
+      const isInline = alt.includes(inline);
+      alt = alt.replace(inline, "");
+      
+      // wait for position to load and a caption if the image is not online and has an alt attribute
+      if (alt.length > 0 && !containsClass(image, 'alt' && !isInline)) {
         imagePosition += 1;
         image.dataset.pos = imagePosition;
         const showImagePosition = showingImagePosition();
-
-        let desc = document.createElement('figcaption');
+        
+        let desc = document.createElement('p');
         desc.classList.add('img_alt');
-
+        let imageAlt = alt;
+        
         const thisImgPos = image.dataset.pos;
         // modify image caption is necessary
-        captionText = showImagePosition ? `${showImagePositionLabel} ${thisImgPos}: ${captionText}` : captionText;
-        desc.textContent = captionText;
-
-        if(!image.matches(`.${featuredImageClass}`)) {
+        imageAlt = showImagePosition ? `${showImagePositionLabel} ${thisImgPos}: ${imageAlt}` : imageAlt;
+        desc.textContent = imageAlt;
+        if(!image.matches(".image_featured")) {
           // add a caption below image only if the image isn't a featured image
           image.insertAdjacentHTML('afterend', desc.outerHTML);
         }
       }
+      
+      if(isInline) {
+        modifyClass(image, 'inline');
+      }
     });
-
+    
     hljs.initHighlightingOnLoad();
   }
-
+  
   function largeImages(baseParent, images = []) {
     if(images) {
       images.forEach(function(image) {
-        window.setTimeout(function(){
-          let actualWidth = image.naturalWidth;
-          let parentWidth = baseParent.offsetWidth;
-          let actionableRatio = actualWidth / parentWidth;
+        let actualWidth = image.naturalWidth;
+        let parentWidth = baseParent.offsetWidth;
+        let actionableRatio = actualWidth / parentWidth;
 
-          if (actionableRatio > 1) {
-            pushClass(image.parentNode.parentNode, imageScalableClass);
-            image.parentNode.parentNode.dataset.scale = actionableRatio;
-          }
-        }, 100)
+        if (actionableRatio > 1) {
+          pushClass(image, "image-scalable");
+          image.dataset.scale = actionableRatio;
+          let figure = createEl('figure');
+          wrapEl(image, figure)
+        }
       });
     }
   }
@@ -307,24 +304,26 @@ function fileClosure(){
     images ? populateAlt(images) : false;
     largeImages(post, images);
   })();
-
+  
   doc.addEventListener('click', function(event) {
     let target = event.target;
-    isClickableImage = target.matches(`.${imageScalableClass}`) || target.closest(`.${imageScalableClass}`) ;
-
-    if(isClickableImage) {
-      let hasClickableImage = containsClass(target.children[0], imageScalableClass);
+    isClickableImage = target.matches('.image-scalable');
+    
+    let isFigure = target.matches('figure');
+    
+    if(isFigure) {
+      let hasClickableImage = containsClass(target.children[0], 'image-scalable');
       if(hasClickableImage) {
-        modifyClass(target, scaleImageClass);
+        modifyClass(target, 'image-scale');
       }
     }
-
+    
     if(isClickableImage) {
-      let figure = target.closest('figure');
-      modifyClass(figure, scaleImageClass);
+      let figure = target.parentNode;
+      modifyClass(figure, 'image-scale');
     }
   });
-
+  
   const tables = elems('table');
   if (tables) {
     const scrollable = 'scrollable';
@@ -334,7 +333,7 @@ function fileClosure(){
       wrapEl(table, wrapper);
     });
   }
-
+  
   function toggleTags(target = null) {
     const tagsButtonClass = 'post_tags_toggle';
     const tagsButtonClass2 = 'tags_hide';
@@ -346,12 +345,12 @@ function fileClosure(){
     const isCloseButton = target.matches(`.${tagsButtonClass2}`) || target.closest(`.${tagsButtonClass2}`);
     const isButton =  isExandButton || isCloseButton;
     const isActionable = isButton || showingAllTags;
-
+    
     if(isActionable) {
       if(isButton) {
         if(isExandButton) {
-          let allTagsWrapper = target.nextElementSibling
-          pushClass(allTagsWrapper, tagsShowClass);
+          let allTagsWrapper = target.nextElementSibling 
+          pushClass(allTagsWrapper, tagsShowClass); 
         } else {
           deleteClass(postTagsWrapper, tagsShowClass);
         }
@@ -360,16 +359,16 @@ function fileClosure(){
       }
     }
   }
-
+  
   (function showAllPostTags(){
     doc.addEventListener('click', function(event){
       const target = event.target;
       toggleTags(target)
     });
-
+    
     horizontalSwipe(doc, toggleTags, 'left');
   })();
-
+  
   (function navToggle() {
     doc.addEventListener('click', function(event){
       const target = event.target;
@@ -383,19 +382,19 @@ function fileClosure(){
         modifyClass(doc, open);
         modifyClass(harmburgerIcon, 'isopen');
       }
-
+      
       if(!target.closest('.nav') && elem(`.${open}`)) {
         modifyClass(doc, open);
         let navIsOpen = containsClass(doc, open);
         !navIsOpen  ? modifyClass(harmburgerIcon, 'isopen') : false;
       }
-
+      
       const navItem = 'nav_item';
       const navSub = 'nav_sub';
       const showSub = 'nav_open';
       const isNavItem = target.matches(`.${navItem}`);
       const isNavItemIcon = target.closest(`.${navItem}`)
-
+      
       if(isNavItem || isNavItemIcon) {
         const thisItem = isNavItem ? target : isNavItemIcon;
         const hasNext = thisItem.nextElementSibling
@@ -411,13 +410,13 @@ function fileClosure(){
       }
     });
   })();
-
+  
   function isMobileDevice() {
     const agent = navigator.userAgent.toLowerCase();
     const isMobile = agent.includes('android') || agent.includes('iphone');
     return  isMobile;
   };
-
+  
   (function ifiOS(){
     // modify backto top button
     const backToTopButton = elem('.to_top');
@@ -436,7 +435,7 @@ function fileClosure(){
       backToTopButton.style.left = `${leftOffset}px`;
     }
   })();
-
+  
   (function sortTags() {
     doc.addEventListener('click', function(event){
       const active = 'active';
@@ -456,7 +455,7 @@ function fileClosure(){
       }
     })
   })();
-
+  
   (function shareViaLinkedin() {
     doc.addEventListener('click', function(event){
       const linkedin = '.linkedin';
@@ -466,7 +465,7 @@ function fileClosure(){
       }
     });
   })();
-
+  
   // add new code above this line
 }
 
