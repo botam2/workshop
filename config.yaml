@@ -1,4 +1,4 @@
-baseurl: https://botam2.github.io/workshop/
+baseurl: https://botam2.netlify.app/
 copyright: Copyright © 2021, bot
 paginate: 10
 theme: hugo-clarity
