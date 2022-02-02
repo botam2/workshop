@@ -94,7 +94,7 @@ iconsDir = "icons/" # without a leading forward slash
 # website author
 [author]
 name = "Gabriel Carrasco"
-photo = "https://user-images.githubusercontent.com/23284899/151292843-4e69ef1e-288c-403b-a7c7-e5f60fe06cca.png" #include this if you would like to show the author photo on the sidebar
+photo = "https://user-images.githubusercontent.com/23284899/151292843-4e69ef1e-288c-403b-a7c7-e5f60fe06cca.png"#include this if you would like to show the author photo on the sidebar
 
 [plausible_analytics]
 enable = false # to enable plausible analytics set to true.

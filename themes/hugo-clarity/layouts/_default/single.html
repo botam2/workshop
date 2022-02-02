@@ -14,27 +14,14 @@
     {{- $t := .Title }}
     <h1 class="post_title">{{ $t }}</h1>
     {{- partial "post-meta" . }}
-    {{- partial "image-feature" . }}
-    {{ if $p.toc }}
-    <div class="post_toc">
-      <h2>{{ T "overview" }}</h2>
-      {{ .TableOfContents }}
-    </div>
+    {{ with $p.featureImage }}
+    <img src="{{ . }}" class="image_featured" alt="{{ $t }}">
     {{ end }}
-    <div class="post_body">
-      {{- .Content }}
-    </div>
-
-    {{- $showRelatedInArticle := true }}
-    {{- if eq $s.showRelatedInArticle false }}
-      {{- $showRelatedInArticle = false }}
-    {{- else if eq $p.showRelatedInArticle false }}
-      {{- $showRelatedInArticle = false }}
-    {{- end }}
-    {{- if ne $showRelatedInArticle false }}
-      {{- partial "related" . }}
-    {{- end }}
-
+    {{ if $p.toc }}
+    <h2>{{ T "overview" }}</h2>
+    {{ .TableOfContents }}
+    {{ end }}
+    {{- .Content }}
     {{- $showComments := true }}
     {{- if eq $s.comments false }}
       {{- $showComments = false }}
@@ -45,7 +32,6 @@
       {{- partial "comments" . }}
     {{- end }}
     {{- partial "i18nlist" . }}
-
   </article>
   {{- if ( ne $p.sidebar false ) }}
     {{- partial "sidebar" . }}
