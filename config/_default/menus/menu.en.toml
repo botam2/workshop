@@ -8,21 +8,21 @@
   url = "installation/"
   weight = -109
 
-[[main]]
-  name = "Demo"
-  url = "demo/"
-  weight = -108
-
 # Submenus are done this way: parent -> identifier
 [[main]]
   name = "Links"
   identifier = "Links"
-  weight = -107
+  weight = -108
+  
+[[main]]
+  parent = "Links"
+  name = "Curriculum Vitae"
+  url = "https://datamares.netlify.app/files/cv.pdf"
 
 [[main]]
-  name = "About us"
+  name = "About"
   url = "about/"
-  weight = -106
+  weight = -107
 
 # social menu links
 
@@ -55,6 +55,10 @@
   name = "gitlab"
   weight = 3
   url = "https://gitlab.com/albersonmiranda"
+#[[social]]
+#  name = "rss"
+#  weight = 4
+#  url = "index.xml"
 
 # other supported social links
 # name = "youtube"
