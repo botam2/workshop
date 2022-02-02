@@ -1,4 +1,6 @@
-.Rproj.user
+*.Rproj
+.hugo_build.lock
 .Rhistory
-.RData
-.Ruserdata
+./public
+.Rproj.user
+.Rproj.user

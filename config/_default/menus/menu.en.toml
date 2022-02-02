@@ -1,22 +1,33 @@
 [[main]]
   name = "Home"
-  url = ""
+  url = "post/"
   weight = -110
 
 [[main]]
-  name = "Archives"
-  url = "post/"
+  name = "Installation"
+  url = "installation/"
   weight = -109
+
+[[main]]
+  name = "Demos"
+  url = "demos/"
+  weight = -108
+
+
 
 # Submenus are done this way: parent -> identifier
 [[main]]
   name = "Links"
   identifier = "Links"
-  weight = -108
+  weight = -107
 [[main]]
   parent = "Links"
-  name = "Curriculum Vitae"
-  url = "https://datamares.netlify.app/files/cv.pdf"
+  name = "rgee"
+  url = ""
+[[main]]
+  parent = "Links"
+  name = "rgeeExtra"
+  url = ""
 
 [[main]]
   name = "About"
@@ -29,35 +40,20 @@
   name = "github"
   type = "social"
   weight = 1
-  url = "https://github.com/albersonmiranda"
+  url = "https://github.com/#"
 [[social]]
   name = "twitter"
   weight = 2
-  url = "https://twitter.com/AlbersonMiranda"
+  url = "https://twitter.com/#"
 [[social]]
   name = "linkedin"
   weight = 3
-  url = "https://www.linkedin.com/in/albersonmiranda/"
+  url = "https://www.linkedin.com/in/#"
+
 [[social]]
-  name = "facebook"
-  weight = 3
-  url = "https://www.facebook.com/alberson.miranda"
-[[social]]
-  name = "instagram"
-  weight = 3
-  url = "https://www.instagram.com/alberson.miranda/"
-[[social]]
-  name = "stackoverflow"
-  weight = 3
-  url = "https://stackoverflow.com/users/8430277/alberson-miranda"
-[[social]]
-  name = "gitlab"
-  weight = 3
-  url = "https://gitlab.com/albersonmiranda"
-#[[social]]
-#  name = "rss"
-#  weight = 4
-#  url = "index.xml"
+  name = "rss"
+  weight = 4
+  url = "index.xml"
 
 # other supported social links
 # name = "youtube"
