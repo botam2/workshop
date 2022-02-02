@@ -14,7 +14,8 @@
             {{ markdownify $s.IntroDescription }}
         </div>
         {{- if ( ne $s.introURL false ) }} {{- $r := T "read_more" }}
-        <a href='{{ absLangURL (default "about/" $s.introURL) }}' class="button mt-1" role="button" title='{{ $r }}'>{{ $r }}</a> {{- end }} {{- end }}
+        <a href='{{ absLangURL (default "about/" $s.introURL) }}' class="button mt-1" role="button" title='{{ $r }}'>{{ $r }}</a> {{- end }} {{- end }} {{- $posts := where (where .Site.RegularPages "Permalink" "!=" .Permalink) "Type" "in" $s.mainSections
+        }} {{- $featured := default 8 $s.numberOfFeaturedPosts }} {{- with first $featured (where $posts "Params.featured" true)}}
 
         <!-- Author 2 -->
         <div class="author_header">
@@ -27,9 +28,6 @@
         </div>
 
 
-
-
-        {{- $posts := where (where .Site.RegularPages "Permalink" "!=" .Permalink) "Type" "in" $s.mainSections }} {{- $featured := default 8 $s.numberOfFeaturedPosts }} {{- with first $featured (where $posts "Params.featured" true)}}
         <h2 class="mt-4">{{ T "featured_posts" }}</h2>
         <ul>
             {{- range . }}
