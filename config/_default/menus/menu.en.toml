@@ -1,6 +1,6 @@
 [[main]]
   name = "Home"
-  url = ""
+  url = "/"
   weight = -110
 
 [[main]]
@@ -13,10 +13,6 @@
   name = "Links"
   identifier = "Links"
   weight = -108
-[[main]]
-  parent = "Links"
-  name = "Curriculum Vitae"
-  url = "https://datamares.netlify.app/files/cv.pdf"
 
 [[main]]
   name = "About"
