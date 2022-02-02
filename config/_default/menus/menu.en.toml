@@ -4,20 +4,25 @@
   weight = -110
 
 [[main]]
-  name = "Archives"
-  url = "post/"
+  name = "Installation"
+  url = "installation/"
   weight = -109
+
+[[main]]
+  name = "Demo"
+  url = "demo/"
+  weight = -108
 
 # Submenus are done this way: parent -> identifier
 [[main]]
   name = "Links"
   identifier = "Links"
-  weight = -108
+  weight = -107
 
 [[main]]
-  name = "About"
+  name = "About us"
   url = "about/"
-  weight = -107
+  weight = -106
 
 # social menu links
 
@@ -50,10 +55,6 @@
   name = "gitlab"
   weight = 3
   url = "https://gitlab.com/albersonmiranda"
-#[[social]]
-#  name = "rss"
-#  weight = 4
-#  url = "index.xml"
 
 # other supported social links
 # name = "youtube"
