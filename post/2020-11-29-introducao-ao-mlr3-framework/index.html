@@ -21,27 +21,27 @@
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:creator" content="@AlbersonMiranda">
 <meta name="twitter:title" content="Introdução ao framework {mlr3}" />
-<meta property="og:url" content="https://datamares.netlify.app/post/2020-11-29-introducao-ao-mlr3-framework/" />
+<meta property="og:url" content="https://botam2.github.io/workshop/post/2020-11-29-introducao-ao-mlr3-framework/" />
 <meta property="og:title" content="Introdução ao framework {mlr3}" />
 <meta property="og:description" content="Uma introdução ao framework de machine learning mlr3, um pacote de R." />
-<meta property="og:image" content="https://datamares.netlify.app/images/posts/2020-12-20%20-%20intro-mlr3.jpeg" />
+<meta property="og:image" content="https://botam2.github.io/workshop/images/posts/2020-12-20%20-%20intro-mlr3.jpeg" />
 
-<link rel="apple-touch-icon" sizes="180x180" href="https://datamares.netlify.app/icons/apple-touch-icon.png">
-<link rel="icon" type="image/png" sizes="32x32" href="https://datamares.netlify.app/icons/favicon-32x32.png">
-<link rel="manifest" href="https://datamares.netlify.app/icons/site.webmanifest">
+<link rel="apple-touch-icon" sizes="180x180" href="https://botam2.github.io/workshop/icons/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://botam2.github.io/workshop/icons/favicon-32x32.png">
+<link rel="manifest" href="https://botam2.github.io/workshop/icons/site.webmanifest">
 
-<link rel="canonical" href="https://datamares.netlify.app/post/2020-11-29-introducao-ao-mlr3-framework/">
-
-    
+<link rel="canonical" href="https://botam2.github.io/workshop/post/2020-11-29-introducao-ao-mlr3-framework/">
 
     
+
     
-    <link rel="preload" href="https://datamares.netlify.app/css/styles.14408e7a6e0114330a9aa434e0c3b0a757cd9c984944cb9b444d45ce8f0af2be87dea13ebcb30b98e6626d59c738f951faabbd45a1ce8d91b6d4428d2d86b254.css" integrity = "sha512-FECOem4BFDMKmqQ04MOwp1fNnJhJRMubRE1Fzo8K8r6H3qE&#43;vLMLmOZibVnHOPlR&#43;qu9RaHOjZG21EKNLYayVA==" as="style" crossorigin="anonymous">
-    <link rel="preload" href="https://datamares.netlify.app/js/bundle.min.d14fbcd65c3ba32e60cab81f8bbe7aa9b7f8b95ff8290e437fb26ff9ab7f7ea0c928db2dca60aac91f192db906f2d90678f83907e4e3994f6ff9fdb5bdea3369.js" as="script" integrity=
+    
+    <link rel="preload" href="https://botam2.github.io/workshop/css/styles.14408e7a6e0114330a9aa434e0c3b0a757cd9c984944cb9b444d45ce8f0af2be87dea13ebcb30b98e6626d59c738f951faabbd45a1ce8d91b6d4428d2d86b254.css" integrity = "sha512-FECOem4BFDMKmqQ04MOwp1fNnJhJRMubRE1Fzo8K8r6H3qE&#43;vLMLmOZibVnHOPlR&#43;qu9RaHOjZG21EKNLYayVA==" as="style" crossorigin="anonymous">
+    <link rel="preload" href="https://botam2.github.io/workshop/js/bundle.min.d14fbcd65c3ba32e60cab81f8bbe7aa9b7f8b95ff8290e437fb26ff9ab7f7ea0c928db2dca60aac91f192db906f2d90678f83907e4e3994f6ff9fdb5bdea3369.js" as="script" integrity=
     "sha512-0U&#43;81lw7oy5gyrgfi756qbf4uV/4KQ5Df7Jv&#43;at/fqDJKNstymCqyR8ZLbkG8tkGePg5B&#43;TjmU9v&#43;f21veozaQ==" crossorigin="anonymous">
 
     
-    <link rel="stylesheet" type="text/css" href="https://datamares.netlify.app/css/styles.14408e7a6e0114330a9aa434e0c3b0a757cd9c984944cb9b444d45ce8f0af2be87dea13ebcb30b98e6626d59c738f951faabbd45a1ce8d91b6d4428d2d86b254.css" integrity="sha512-FECOem4BFDMKmqQ04MOwp1fNnJhJRMubRE1Fzo8K8r6H3qE&#43;vLMLmOZibVnHOPlR&#43;qu9RaHOjZG21EKNLYayVA==" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://botam2.github.io/workshop/css/styles.14408e7a6e0114330a9aa434e0c3b0a757cd9c984944cb9b444d45ce8f0af2be87dea13ebcb30b98e6626d59c738f951faabbd45a1ce8d91b6d4428d2d86b254.css" integrity="sha512-FECOem4BFDMKmqQ04MOwp1fNnJhJRMubRE1Fzo8K8r6H3qE&#43;vLMLmOZibVnHOPlR&#43;qu9RaHOjZG21EKNLYayVA==" crossorigin="anonymous">
     
   </head>
   
@@ -52,8 +52,8 @@
   <body data-code="10" data-lines="true" id="documentTop">
 
 <header class="nav_header" >
-  <nav class="nav"><a href='https://datamares.netlify.app/' class="nav_brand nav_item" title="Datamares &amp; Dreamscapes">
-  <img src="https://datamares.netlify.app/logos/logo.png" class="logo" alt="Datamares &amp; Dreamscapes">
+  <nav class="nav"><a href='https://botam2.github.io/workshop/' class="nav_brand nav_item" title="Datamares &amp; Dreamscapes">
+  <img src="https://botam2.github.io/workshop/logos/logo.png" class="logo" alt="Datamares &amp; Dreamscapes">
   <div class="nav_close">
     <div><svg class="icon">
   <use xlink:href="#open-menu"></use>
@@ -70,20 +70,20 @@
         
 
   <div class="nav_parent">
-    <a href="https://datamares.netlify.app/" class="nav_item" title="Home">Home </a>
+    <a href="https://botam2.github.io/workshop/" class="nav_item" title="Home">Home </a>
   </div>
   <div class="nav_parent">
-    <a href="https://datamares.netlify.app/post/" class="nav_item" title="Archives">Archives </a>
+    <a href="https://botam2.github.io/workshop/post/" class="nav_item" title="Archives">Archives </a>
   </div>
   <div class="nav_parent">
-    <a href="https://datamares.netlify.app/" class="nav_item" title="Links">Links <img src='https://datamares.netlify.app/icons/caret-icon.svg' alt="icon" class="nav_icon"></a>
+    <a href="https://botam2.github.io/workshop/" class="nav_item" title="Links">Links <img src='https://botam2.github.io/workshop/icons/caret-icon.svg' alt="icon" class="nav_icon"></a>
     <div class="nav_sub">
       <span class="nav_child"></span>
         <a href="https://datamares.netlify.app/files/cv.pdf" class="nav_child nav_item" title="Curriculum Vitae">Curriculum Vitae</a>
     </div>
   </div>
   <div class="nav_parent">
-    <a href="https://datamares.netlify.app/about/" class="nav_item" title="About">About </a>
+    <a href="https://botam2.github.io/workshop/about/" class="nav_item" title="About">About </a>
   </div>
       
       <div class="nav_parent">
@@ -91,9 +91,9 @@
         <div class="nav_sub">
           <span class="nav_child"></span>
           
-          <a href="https://datamares.netlify.app/" class="nav_child nav_item">English</a>
+          <a href="https://botam2.github.io/workshop/" class="nav_child nav_item">English</a>
           
-          <a href="https://datamares.netlify.app/pt/" class="nav_child nav_item">Português</a>
+          <a href="https://botam2.github.io/workshop/pt/" class="nav_child nav_item">Português</a>
           
         </div>
       </div>
@@ -154,19 +154,19 @@
 </svg></span>
     <span class="post_date">
       Dec 27, 2020</span>
-    <span class="post_time"> · 13 min read</span><span>&nbsp;· <a href='https://datamares.netlify.app/tags/mlr3' title="mlr3" class="post_tag button button_translucent">mlr3
-        </a><a href='https://datamares.netlify.app/tags/r' title="R" class="post_tag button button_translucent">R
+    <span class="post_time"> · 13 min read</span><span>&nbsp;· <a href='https://botam2.github.io/workshop/tags/mlr3' title="mlr3" class="post_tag button button_translucent">mlr3
+        </a><a href='https://botam2.github.io/workshop/tags/r' title="R" class="post_tag button button_translucent">R
         </a>
     </span>
     <span class="page_only">&nbsp;·
   <div class="post_share">
     Share on:
-    <a href="https://twitter.com/intent/tweet?text=Introdu%c3%a7%c3%a3o%20ao%20framework%20%7bmlr3%7d&url=https%3a%2f%2fdatamares.netlify.app%2fpost%2f2020-11-29-introducao-ao-mlr3-framework%2f&tw_p=tweetbutton" class="twitter" title="Share on Twitter" target="_blank" rel="nofollow">
+    <a href="https://twitter.com/intent/tweet?text=Introdu%c3%a7%c3%a3o%20ao%20framework%20%7bmlr3%7d&url=https%3a%2f%2fbotam2.github.io%2fworkshop%2fpost%2f2020-11-29-introducao-ao-mlr3-framework%2f&tw_p=tweetbutton" class="twitter" title="Share on Twitter" target="_blank" rel="nofollow">
       <svg class="icon">
   <use xlink:href="#twitter"></use>
 </svg>
     </a>
-    <a href="https://www.facebook.com/sharer.php?u=https%3a%2f%2fdatamares.netlify.app%2fpost%2f2020-11-29-introducao-ao-mlr3-framework%2f&t=Introdu%c3%a7%c3%a3o%20ao%20framework%20%7bmlr3%7d" class="facebook" title="Share on Facebook" target="_blank" rel="nofollow">
+    <a href="https://www.facebook.com/sharer.php?u=https%3a%2f%2fbotam2.github.io%2fworkshop%2fpost%2f2020-11-29-introducao-ao-mlr3-framework%2f&t=Introdu%c3%a7%c3%a3o%20ao%20framework%20%7bmlr3%7d" class="facebook" title="Share on Facebook" target="_blank" rel="nofollow">
       <svg class="icon">
   <use xlink:href="#facebook"></use>
 </svg>
@@ -176,7 +176,7 @@
   <use xlink:href="#linkedin"></use>
 </svg>
     </a>
-    <a href="https://datamares.netlify.app/post/2020-11-29-introducao-ao-mlr3-framework/" title="Copy Link" class="link link_yank">
+    <a href="https://botam2.github.io/workshop/post/2020-11-29-introducao-ao-mlr3-framework/" title="Copy Link" class="link link_yank">
       <svg class="icon">
   <use xlink:href="#copy"></use>
 </svg>
@@ -189,7 +189,7 @@
     <img src="img/mlr3verse.svg" class="image_featured" alt="Introdução ao framework {mlr3}">
     
     
-<script src="https://datamares.netlify.app/post/2020-11-29-introducao-ao-mlr3-framework/index_files/header-attrs/header-attrs.js"></script>
+<script src="https://botam2.github.io/workshop/post/2020-11-29-introducao-ao-mlr3-framework/index_files/header-attrs/header-attrs.js"></script>
 
 
 <p>Esse é o primeiro post de uma série que irá tratar sobre o ecossistema {mlr3} <span class="citation">(<a href="#ref-mlr3" role="doc-biblioref">Lang et al. 2019</a>)</span>. Ele é mais completo e também muito mais complexo do que seu predecessor, o {mlr}, que teve sua versão inicial publicada no CRAN em 2013. O ecossistema permite um framework agnóstico (i.e. não depende dos algoritmos escolhidos), extensível e orientado a objeto, e, atualmente, permite vários tipos de tarefas, como classificação, regressão, análise de sobrevivência, forecasting, clustering, dentre outros. O {mlr3} tem diversas vantagens que o faz, IMHO, o <em>framework</em> mais completo para se trabalhar <em>machine learning</em> em R <span class="citation">(<a href="#ref-R" role="doc-biblioref">R Core Team 2020</a>)</span> e elas ficarão claras ao longo dos próximos posts.</p>
@@ -401,7 +401,7 @@
 ## * Features (5):
 ##   - dbl (3): Agriculture, Catholic, Fertility
 ##   - int (2): Education, Examination</code></pre>
-<p><img src="https://datamares.netlify.app/post/2020-11-29-introducao-ao-mlr3-framework/index_files/figure-html/task_cont-1.png" width="672" /></p>
+<p><img src="https://botam2.github.io/workshop/post/2020-11-29-introducao-ao-mlr3-framework/index_files/figure-html/task_cont-1.png" width="672" /></p>
 <p>Podemos ver que apenas a fertilidade é linearmente correlacionada com a mortalidade infantil — quanto maior a fertilidade, maior a mortalidade —, e podemos esperar que tenha maior peso nas predições. As demais variáveis não apresentam correlação linear significativa com a variável de resposta. Entretanto, apresentam correlação moderada ou forte entre si, mas não a ponto de apresentar colinearidade, o que demandaria tratamento.</p>
 <p>Agora selecionamos o algoritmo<a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a> que será usado para treinar o modelo. Escolhi aqui o <em>XGBoost</em>. A lista completa pode ser acessada <a href="https://mlr3extralearners.mlr-org.com/articles/learners/learner_status.html">por essa lista estática</a>, <a href="https://mlr3extralearners.mlr-org.com/articles/learners/list_learners.html">por essa lista dinâmica</a> ou pela função <code>mlr3extralearners::list_mlr3learners()</code>. Como mencionado anteriormente, os algoritmos não são implementados pelo ecossistema do {mlr3} e nas listas citadas constam os pacotes onde os algoritmos foram implementados e que devem ser baixados para o seu uso.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-r" data-lang="r"><span class="ln">1</span><span class="c1"># definindo o learner</span>
@@ -656,7 +656,7 @@
 <pre><code>## regr.rmse  regr.mae 
 ##  2.587082  2.214177</code></pre>
 <pre><code>## `geom_smooth()` using formula &#39;y ~ x&#39;</code></pre>
-<p><img src="https://datamares.netlify.app/post/2020-11-29-introducao-ao-mlr3-framework/index_files/figure-html/accuracy-1.png" width="672" /></p>
+<p><img src="https://botam2.github.io/workshop/post/2020-11-29-introducao-ao-mlr3-framework/index_files/figure-html/accuracy-1.png" width="672" /></p>
 <p>A <em>rmse</em> do modelo na amostra teste ficou em apenas 2.59 unidades, o que é uma performance muito boa!</p>
 </div>
 <div id="interpretação" class="section level1">
@@ -669,14 +669,14 @@
 <span class="ln">5</span><span class="nf">barplot</span><span class="p">(</span><span class="n">l_xgboost</span><span class="o">$</span><span class="nf">importance</span><span class="p">())</span></code></pre></div>
 <pre><code>##    Catholic Agriculture   Fertility Examination   Education 
 ##  0.39696784  0.24723198  0.20219343  0.10340228  0.05020448</code></pre>
-<p><img src="https://datamares.netlify.app/post/2020-11-29-introducao-ao-mlr3-framework/index_files/figure-html/importance-1.png" width="672" /></p>
+<p><img src="https://botam2.github.io/workshop/post/2020-11-29-introducao-ao-mlr3-framework/index_files/figure-html/importance-1.png" width="672" /></p>
 <p>Entretanto, somente a importância não nos descreve o relacionamento da <em>feature</em> com a variável de resposta, nem mesmo sua direção, sendo uma medida muito pobre de interpretação. Discutiremos técnicas de interpretação em outras postagens.</p>
 </div>
 <div id="citação" class="section level1">
 <h1>CITAÇÃO</h1>
 <p>Para citar esse post, use:
 
-<p>Alberson Miranda. Dec 27, 2020. <em>"Introdução ao framework {mlr3}"</em>. https://datamares.netlify.app/post/2020-11-29-introducao-ao-mlr3-framework/.</p>
+<p>Alberson Miranda. Dec 27, 2020. <em>"Introdução ao framework {mlr3}"</em>. https://botam2.github.io/workshop/post/2020-11-29-introducao-ao-mlr3-framework/.</p>
 
 <p>Ou a entrada em BibTex:</p>
 
@@ -685,7 +685,7 @@
     title = {Introdução ao framework {mlr3}},
     author = {Alberson Miranda},
     year = {2020},
-    url = {https://datamares.netlify.app/post/2020-11-29-introducao-ao-mlr3-framework/}
+    url = {https://botam2.github.io/workshop/post/2020-11-29-introducao-ao-mlr3-framework/}
   &#125;
 </pre></code></p>
 </div>
@@ -727,45 +727,45 @@ R Core Team. 2020. <em>R: A Language and Environment for Statistical Computing</
       <div class="author_bio">
         coordenador no @Banestes_SA, economista (UFES) e graduando em matemática (IFES). #rstats &amp; #python.
       </div>
-      <a href='https://datamares.netlify.app/about/' class="button mt-1" role="button" title='Read More'>Read More</a>
+      <a href='https://botam2.github.io/workshop/about/' class="button mt-1" role="button" title='Read More'>Read More</a>
     <h2 class="mt-4">Recent Posts</h2>
     <ul class="flex-column">
       <li>
-        <a href="https://datamares.netlify.app/post/configurando-git-em-um-servidor-proxy/" class="nav-link" title="Configurando git em um servidor proxy">Configurando git em um servidor proxy</a>
+        <a href="https://botam2.github.io/workshop/post/configurando-git-em-um-servidor-proxy/" class="nav-link" title="Configurando git em um servidor proxy">Configurando git em um servidor proxy</a>
       </li>
       <li>
-        <a href="https://datamares.netlify.app/post/hello-world/" class="nav-link" title="Hello World!">Hello World!</a>
+        <a href="https://botam2.github.io/workshop/post/hello-world/" class="nav-link" title="Hello World!">Hello World!</a>
       </li>
     </ul>
     <div>
       <h2 class="mt-4 taxonomy" id="tags-section">Tags</h2>
       <nav class="tags_nav">
-        <a href='https://datamares.netlify.app/tags/eu/' class="post_tag button button_translucent" title="eu">
+        <a href='https://botam2.github.io/workshop/tags/eu/' class="post_tag button button_translucent" title="eu">
           EU
           <span class="button_tally">1</span>
         </a>
         
-        <a href='https://datamares.netlify.app/tags/git/' class="post_tag button button_translucent" title="git">
+        <a href='https://botam2.github.io/workshop/tags/git/' class="post_tag button button_translucent" title="git">
           GIT
           <span class="button_tally">1</span>
         </a>
         
-        <a href='https://datamares.netlify.app/tags/index/' class="post_tag button button_translucent" title="index">
+        <a href='https://botam2.github.io/workshop/tags/index/' class="post_tag button button_translucent" title="index">
           INDEX
           <span class="button_tally">1</span>
         </a>
         
-        <a href='https://datamares.netlify.app/tags/mlr3/' class="post_tag button button_translucent" title="mlr3">
+        <a href='https://botam2.github.io/workshop/tags/mlr3/' class="post_tag button button_translucent" title="mlr3">
           MLR3
           <span class="button_tally">1</span>
         </a>
         
-        <a href='https://datamares.netlify.app/tags/r/' class="post_tag button button_translucent" title="r">
+        <a href='https://botam2.github.io/workshop/tags/r/' class="post_tag button button_translucent" title="r">
           R
           <span class="button_tally">1</span>
         </a>
         
-        <a href='https://datamares.netlify.app/tags/usethis/' class="post_tag button button_translucent" title="usethis">
+        <a href='https://botam2.github.io/workshop/tags/usethis/' class="post_tag button button_translucent" title="usethis">
           USETHIS
           <span class="button_tally">1</span>
         </a>
@@ -846,7 +846,7 @@ R Core Team. 2020. <em>R: A Language and Environment for Statistical Computing</
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/contrib/auto-render.min.js" integrity="sha384-mll67QQFJfxn0IYznZYonOWZ644AWYC+Pt2cHqMaRhXVrursRwvLnLaebdGIlYNa" crossorigin="anonymous" onload="renderMathInElement(document.body);"></script>
 <footer class="footer">
   <div class="footer_inner wrap pale">
-    <img src='https://datamares.netlify.app/icons/apple-touch-icon.png' class="icon icon_2 transparent" alt="Datamares &amp; Dreamscapes">
+    <img src='https://botam2.github.io/workshop/icons/apple-touch-icon.png' class="icon icon_2 transparent" alt="Datamares &amp; Dreamscapes">
     <p>Copyright&nbsp;2020-&nbsp;<span class="year"></span>&nbsp;DATAMARES &amp; DREAMSCAPES. All Rights Reserved</p><a class="to_top" href="#documentTop">
   <svg class="icon">
   <use xlink:href="#arrow"></use>
@@ -856,7 +856,7 @@ R Core Team. 2020. <em>R: A Language and Environment for Statistical Computing</
   </div>
 </footer>
 
-    <script type="text/javascript" src="https://datamares.netlify.app/js/bundle.min.d14fbcd65c3ba32e60cab81f8bbe7aa9b7f8b95ff8290e437fb26ff9ab7f7ea0c928db2dca60aac91f192db906f2d90678f83907e4e3994f6ff9fdb5bdea3369.js" integrity="sha512-0U&#43;81lw7oy5gyrgfi756qbf4uV/4KQ5Df7Jv&#43;at/fqDJKNstymCqyR8ZLbkG8tkGePg5B&#43;TjmU9v&#43;f21veozaQ==" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://botam2.github.io/workshop/js/bundle.min.d14fbcd65c3ba32e60cab81f8bbe7aa9b7f8b95ff8290e437fb26ff9ab7f7ea0c928db2dca60aac91f192db906f2d90678f83907e4e3994f6ff9fdb5bdea3369.js" integrity="sha512-0U&#43;81lw7oy5gyrgfi756qbf4uV/4KQ5Df7Jv&#43;at/fqDJKNstymCqyR8ZLbkG8tkGePg5B&#43;TjmU9v&#43;f21veozaQ==" crossorigin="anonymous"></script>
     <link rel="preconnect" href="https://fonts.gstatic.com">
 <link href="https://fonts.googleapis.com/css2?family=Merriweather&family=Inconsolata&family=IBM+Plex+Mono&family=Nunito&family=Fira+Code&family=Source+Code+Pro&family=Montserrat&family=Raleway&family=Roboto" rel="stylesheet">
 

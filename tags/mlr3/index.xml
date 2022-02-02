@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>mlr3 on Datamares &amp; Dreamscapes</title>
-    <link>https://datamares.netlify.app/tags/mlr3/</link>
+    <link>https://botam2.github.io/workshop/tags/mlr3/</link>
     <description>Recent content in mlr3 on Datamares &amp; Dreamscapes</description>
     <generator>Hugo -- gohugo.io</generator>
     <copyright>Copyright © 2021, Alberson Miranda; all rights reserved.</copyright>
-    <lastBuildDate>Sun, 27 Dec 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://datamares.netlify.app/tags/mlr3/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 27 Dec 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://botam2.github.io/workshop/tags/mlr3/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Introdução ao framework {mlr3}</title>
-      <link>https://datamares.netlify.app/post/2020-11-29-introducao-ao-mlr3-framework/</link>
+      <link>https://botam2.github.io/workshop/post/2020-11-29-introducao-ao-mlr3-framework/</link>
       <pubDate>Sun, 27 Dec 2020 00:00:00 +0000</pubDate>
       
-      <guid>https://datamares.netlify.app/post/2020-11-29-introducao-ao-mlr3-framework/</guid>
+      <guid>https://botam2.github.io/workshop/post/2020-11-29-introducao-ao-mlr3-framework/</guid>
       <description>
         
           
-&lt;script src=&#34;https://datamares.netlify.app/post/2020-11-29-introducao-ao-mlr3-framework/index_files/header-attrs/header-attrs.js&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;https://botam2.github.io/workshop/post/2020-11-29-introducao-ao-mlr3-framework/index_files/header-attrs/header-attrs.js&#34;&gt;&lt;/script&gt;
 
 
 &lt;p&gt;Esse é o primeiro post de uma série que irá tratar sobre o ecossistema {mlr3} &lt;span class=&#34;citation&#34;&gt;(&lt;a href=&#34;#ref-mlr3&#34; role=&#34;doc-biblioref&#34;&gt;Lang et al. 2019&lt;/a&gt;)&lt;/span&gt;. Ele é mais completo e também muito mais complexo do que seu predecessor, o {mlr}, que teve sua versão inicial publicada no CRAN em 2013. O ecossistema permite um framework agnóstico (i.e. não depende dos algoritmos escolhidos), extensível e orientado a objeto, e, atualmente, permite vários tipos de tarefas, como classificação, regressão, análise de sobrevivência, forecasting, clustering, dentre outros. O {mlr3} tem diversas vantagens que o faz, IMHO, o &lt;em&gt;framework&lt;/em&gt; mais completo para se trabalhar &lt;em&gt;machine learning&lt;/em&gt; em R &lt;span class=&#34;citation&#34;&gt;(&lt;a href=&#34;#ref-R&#34; role=&#34;doc-biblioref&#34;&gt;R Core Team 2020&lt;/a&gt;)&lt;/span&gt; e elas ficarão claras ao longo dos próximos posts.&lt;/p&gt;
@@ -228,7 +228,7 @@
 ## * Features (5):
 ##   - dbl (3): Agriculture, Catholic, Fertility
 ##   - int (2): Education, Examination&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;https://datamares.netlify.app/post/2020-11-29-introducao-ao-mlr3-framework/index_files/figure-html/task_cont-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://botam2.github.io/workshop/post/2020-11-29-introducao-ao-mlr3-framework/index_files/figure-html/task_cont-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;Podemos ver que apenas a fertilidade é linearmente correlacionada com a mortalidade infantil — quanto maior a fertilidade, maior a mortalidade —, e podemos esperar que tenha maior peso nas predições. As demais variáveis não apresentam correlação linear significativa com a variável de resposta. Entretanto, apresentam correlação moderada ou forte entre si, mas não a ponto de apresentar colinearidade, o que demandaria tratamento.&lt;/p&gt;
 &lt;p&gt;Agora selecionamos o algoritmo&lt;a href=&#34;#fn3&#34; class=&#34;footnote-ref&#34; id=&#34;fnref3&#34;&gt;&lt;sup&gt;3&lt;/sup&gt;&lt;/a&gt; que será usado para treinar o modelo. Escolhi aqui o &lt;em&gt;XGBoost&lt;/em&gt;. A lista completa pode ser acessada &lt;a href=&#34;https://mlr3extralearners.mlr-org.com/articles/learners/learner_status.html&#34;&gt;por essa lista estática&lt;/a&gt;, &lt;a href=&#34;https://mlr3extralearners.mlr-org.com/articles/learners/list_learners.html&#34;&gt;por essa lista dinâmica&lt;/a&gt; ou pela função &lt;code&gt;mlr3extralearners::list_mlr3learners()&lt;/code&gt;. Como mencionado anteriormente, os algoritmos não são implementados pelo ecossistema do {mlr3} e nas listas citadas constam os pacotes onde os algoritmos foram implementados e que devem ser baixados para o seu uso.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-r&#34; data-lang=&#34;r&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;# definindo o learner&lt;/span&gt;
@@ -483,7 +483,7 @@
 &lt;pre&gt;&lt;code&gt;## regr.rmse  regr.mae 
 ##  2.587082  2.214177&lt;/code&gt;&lt;/pre&gt;
 &lt;pre&gt;&lt;code&gt;## `geom_smooth()` using formula &amp;#39;y ~ x&amp;#39;&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;https://datamares.netlify.app/post/2020-11-29-introducao-ao-mlr3-framework/index_files/figure-html/accuracy-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://botam2.github.io/workshop/post/2020-11-29-introducao-ao-mlr3-framework/index_files/figure-html/accuracy-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;A &lt;em&gt;rmse&lt;/em&gt; do modelo na amostra teste ficou em apenas 2.59 unidades, o que é uma performance muito boa!&lt;/p&gt;
 &lt;/div&gt;
 &lt;div id=&#34;interpretação&#34; class=&#34;section level1&#34;&gt;
@@ -496,14 +496,14 @@
 &lt;span class=&#34;ln&#34;&gt;5&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;barplot&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;l_xgboost&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;$&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;importance&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;())&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;pre&gt;&lt;code&gt;##    Catholic Agriculture   Fertility Examination   Education 
 ##  0.39696784  0.24723198  0.20219343  0.10340228  0.05020448&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;https://datamares.netlify.app/post/2020-11-29-introducao-ao-mlr3-framework/index_files/figure-html/importance-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://botam2.github.io/workshop/post/2020-11-29-introducao-ao-mlr3-framework/index_files/figure-html/importance-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;Entretanto, somente a importância não nos descreve o relacionamento da &lt;em&gt;feature&lt;/em&gt; com a variável de resposta, nem mesmo sua direção, sendo uma medida muito pobre de interpretação. Discutiremos técnicas de interpretação em outras postagens.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div id=&#34;citação&#34; class=&#34;section level1&#34;&gt;
 &lt;h1&gt;CITAÇÃO&lt;/h1&gt;
 &lt;p&gt;Para citar esse post, use:
 
-&lt;p&gt;Alberson Miranda. Dec 27, 2020. &lt;em&gt;&#34;Introdução ao framework {mlr3}&#34;&lt;/em&gt;. https://datamares.netlify.app/post/2020-11-29-introducao-ao-mlr3-framework/.&lt;/p&gt;
+&lt;p&gt;Alberson Miranda. Dec 27, 2020. &lt;em&gt;&#34;Introdução ao framework {mlr3}&#34;&lt;/em&gt;. https://botam2.github.io/workshop/post/2020-11-29-introducao-ao-mlr3-framework/.&lt;/p&gt;
 
 &lt;p&gt;Ou a entrada em BibTex:&lt;/p&gt;
 
@@ -512,7 +512,7 @@
     title = {Introdução ao framework {mlr3}},
     author = {Alberson Miranda},
     year = {2020},
-    url = {https://datamares.netlify.app/post/2020-11-29-introducao-ao-mlr3-framework/}
+    url = {https://botam2.github.io/workshop/post/2020-11-29-introducao-ao-mlr3-framework/}
   &amp;#125;
 &lt;/pre&gt;&lt;/code&gt;&lt;/p&gt;
 &lt;/div&gt;

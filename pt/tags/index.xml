@@ -2,9 +2,9 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Tags on Datamares &amp; Dreamscapes</title>
-    <link>https://datamares.netlify.app/pt/tags/</link>
+    <link>https://botam2.github.io/workshop/pt/tags/</link>
     <description>Recent content in Tags on Datamares &amp; Dreamscapes</description>
     <generator>Hugo -- gohugo.io</generator>
-    <copyright>Copyright © 2021, Alberson Miranda; all rights reserved.</copyright><atom:link href="https://datamares.netlify.app/pt/tags/index.xml" rel="self" type="application/rss+xml" />
+    <copyright>Copyright © 2021, Alberson Miranda; all rights reserved.</copyright><atom:link href="https://botam2.github.io/workshop/pt/tags/index.xml" rel="self" type="application/rss+xml" />
   </channel>
 </rss>

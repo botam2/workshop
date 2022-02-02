@@ -2,41 +2,41 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://datamares.netlify.app/pt/about/</loc>
+    <loc>https://botam2.github.io/workshop/pt/about/</loc>
     <lastmod>2020-09-16T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="https://datamares.netlify.app/about/"
+                href="https://botam2.github.io/workshop/about/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="pt"
-                href="https://datamares.netlify.app/pt/about/"
+                href="https://botam2.github.io/workshop/pt/about/"
                 />
   </url><url>
-    <loc>https://datamares.netlify.app/pt/</loc>
+    <loc>https://botam2.github.io/workshop/pt/</loc>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="https://datamares.netlify.app/"
+                href="https://botam2.github.io/workshop/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="pt"
-                href="https://datamares.netlify.app/pt/"
+                href="https://botam2.github.io/workshop/pt/"
                 />
   </url><url>
-    <loc>https://datamares.netlify.app/pt/tags/</loc>
+    <loc>https://botam2.github.io/workshop/pt/tags/</loc>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="https://datamares.netlify.app/tags/"
+                href="https://botam2.github.io/workshop/tags/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="pt"
-                href="https://datamares.netlify.app/pt/tags/"
+                href="https://botam2.github.io/workshop/pt/tags/"
                 />
   </url>
 </urlset>
