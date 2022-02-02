@@ -1,0 +1,8 @@
+baseurl: https://botam2.github.io/workshop/
+copyright: Copyright © 2021, bot
+paginate: 10
+theme: hugo-clarity
+disqusShortname: ''
+DefaultContentLanguage: en
+taxonomies:
+  tag: tags
