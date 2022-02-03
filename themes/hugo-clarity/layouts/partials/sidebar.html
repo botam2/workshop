@@ -13,17 +13,6 @@
         <div class="author_bio">
             {{ markdownify $s.IntroDescription }}
         </div>
-
-        <!-- Author 2 -->
-        <!-- <div class="author_header">
-            <img src="https://user-images.githubusercontent.com/23284899/151292854-47fbdc8b-f947-46ed-8af1-853a3f2d6d30.png" alt="{{ $author.name }} photo" align="center" style="margin: 2rem 0rem 0rem 0rem;">
-            <h2>Antony Barja</h2>
-        </div>
-
-        <div class="author_bio" style="text-align:initial;">
-            BSc in Geographical Engineering-National University of San Marcos, data analyst at Health Innovation Lab
-        </div> -->
-
         {{- if ( ne $s.introURL false ) }} {{- $r := T "read_more" }}
         <a href='{{ absLangURL (default "about/" $s.introURL) }}' class="button mt-1" role="button" title='{{ $r }}'>{{ $r }}</a> {{- end }} {{- end }} {{- $posts := where (where .Site.RegularPages "Permalink" "!=" .Permalink) "Type" "in" $s.mainSections
         }} {{- $featured := default 8 $s.numberOfFeaturedPosts }} {{- with first $featured (where $posts "Params.featured" true)}}
