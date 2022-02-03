@@ -5,7 +5,7 @@
 
 [[main]]
   name = "Installation"
-  url = "installation/"
+  url = "installation"
   weight = -110
   
 [[main]]

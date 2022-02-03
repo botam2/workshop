@@ -5,7 +5,7 @@ date: 2020-12-01T21:13:14-05:00
 tags: ["rgee", "r"]
 ---
 
-# **Introduction**
+### 2.1 Introduction
 
 Google Erth Engine is a cloud-based platform that allows both expert and non-expert users to access and run a large 
 and non-expert users to access and run a large, planetary-scale remote sensing dataset in a matter of minutes. 
@@ -14,7 +14,7 @@ data in a matter of minutes.
 Currently Google Earth Engine has JavaScript and Python as its official client libraries; however 
 rgee is a new alternative that allows this same Google potential to be integrated within R.
 
-# **Why rgee instead of Javascript or Python?**
+### 2.2 Why rgee instead of Javascript or Python?
 
 <table>
 <tr>
@@ -59,16 +59,13 @@ image$bandNames()$getInfo()
 </tr>
 </table>
 
-
-# **Advantajes of use Google Earth Engine on R**
-
  - The syntax is shorter and understandable for users with little programming experience.
  - It allows the integration of the R spatial ecosystem.  
  - Application development is easier and more accessible thanks to the integration of flexdashboard and shiny.
  - Easy sharing of reproducible code.
  - API more friendly and intuitive to R users. 
 
-# **Installation**
+### 2.3 Installation 📥
 
 There is a space in the menu bar, where is the [installation](https://botam2.netlify.app/installation/) of rgee step by step in the different operating systems, in this section we will show the installation in an Ubuntu Operating System.
 First you need to have your operating system configured with some space libraries installations, this is shown in the following Bash commands.  
@@ -112,13 +109,13 @@ ee_check()
 
 ```
 
-# **Authentication**
+### 2.4 Authentication 🔐
 When working with Google Earth Engine it is necessary to register our credentials only if they are needed to move data from Google Drive and Google Cloud Storage to our local environment. These dependencies are not mandatory, but are available within rgee.
-
 rgee allows to work with the three google API'S, these are:
- - Google Earth Engine
- - Google Drive
- - Google Cloud Storage
+
+ - **Google Earth Engine**
+ - **Google Drive**
+ - **Google Cloud Storage**
 
 To authenticate/initialize either Google Drive or Google Cloud Storage, you just need to run:
 
@@ -144,7 +141,7 @@ Remember you only have to authorize once, for subsequent sessions it will not be
 
 More information, please click [here](https://r-spatial.github.io/rgee/articles/rgee01.html#authentication)
 
-# **Hello spatial world**
+### 2.5 Hello spatial world 🌎
 
 ```{r eval = F}
 library(rgee)
@@ -186,22 +183,26 @@ ee$String("Hello World from Earth Engine!") %>%
 **Viewing elevation data (pipe integration)**
 
 ````{r, eval = F}
+library(rgee)
+library(cptcity)
+ee_Initialize()
+
+viz = list(
+  min = 500,
+  max = 5000,
+  palette = cpt("grass_elevation",rev = TRUE)
+  )
+  
 ee$Image("CGIAR/SRTM90_V4") %>%
-  Map$addLayer(
-    visParams = list(
-      min = 500,
-      max = 5000,
-      palette = cpt("grass_elevation",rev = TRUE)
-      )
-    )
+  Map$addLayer(name = "Elevation",visParams = viz) + 
+  Map$addLegend(visParams = viz)
 ```
 
 <center>
-<a href="#"><img src="https://user-images.githubusercontent.com/23284899/152284874-c1005391-5267-44de-8bf0-6245b90570c4.png
-" width="100%"></a>
+<a href="#"><img src="https://user-images.githubusercontent.com/23284899/152376518-5e9d62d1-a87a-439a-b5ee-5a9a33ddea0e.png" width="100%"></a>
 </center>
 
-# **More examples**
+### 2.6 More examples 📚
 <center>
 <a href="https://github.com/r-spatial/rgee/tree/examples"><img src="https://user-images.githubusercontent.com/23284899/152283689-c5a4c789-793a-40ac-b4b8-905007bd1764.png
 " width="100%"></a>

@@ -8,16 +8,16 @@ tags: ["rgee", "r"]
 <script src="{{< blogdown/postref >}}index_files/header-attrs/header-attrs.js"></script>
 
 
-<div id="introduction" class="section level1">
-<h1><strong>Introduction</strong></h1>
+<div id="introduction" class="section level3">
+<h3>2.1 Introduction</h3>
 <p>Google Erth Engine is a cloud-based platform that allows both expert and non-expert users to access and run a large
 and non-expert users to access and run a large, planetary-scale remote sensing dataset in a matter of minutes.
 data in a matter of minutes.</p>
 <p>Currently Google Earth Engine has JavaScript and Python as its official client libraries; however
 rgee is a new alternative that allows this same Google potential to be integrated within R.</p>
 </div>
-<div id="why-rgee-instead-of-javascript-or-python" class="section level1">
-<h1><strong>Why rgee instead of Javascript or Python?</strong></h1>
+<div id="why-rgee-instead-of-javascript-or-python" class="section level3">
+<h3>2.2 Why rgee instead of Javascript or Python?</h3>
 <table>
 <tr>
 <th>
@@ -55,9 +55,6 @@ image$bandNames()$getInfo()
 </td>
 </tr>
 </table>
-</div>
-<div id="advantajes-of-use-google-earth-engine-on-r" class="section level1">
-<h1><strong>Advantajes of use Google Earth Engine on R</strong></h1>
 <ul>
 <li>The syntax is shorter and understandable for users with little programming experience.</li>
 <li>It allows the integration of the R spatial ecosystem.<br />
@@ -67,8 +64,8 @@ image$bandNames()$getInfo()
 <li>API more friendly and intuitive to R users.</li>
 </ul>
 </div>
-<div id="installation" class="section level1">
-<h1><strong>Installation</strong></h1>
+<div id="installation" class="section level3">
+<h3>2.3 Installation 📥</h3>
 <p>There is a space in the menu bar, where is the <a href="https://botam2.netlify.app/installation/">installation</a> of rgee step by step in the different operating systems, in this section we will show the installation in an Ubuntu Operating System.
 First you need to have your operating system configured with some space libraries installations, this is shown in the following Bash commands.</p>
 <pre><code># install system dependencies:
@@ -100,13 +97,15 @@ ee_check()</code></pre>
 ✓ [Ok] earthengine-api
 </code></pre>
 </div>
-<div id="authentication" class="section level1">
-<h1><strong>Authentication</strong></h1>
-<p>When working with Google Earth Engine it is necessary to register our credentials only if they are needed to move data from Google Drive and Google Cloud Storage to our local environment. These dependencies are not mandatory, but are available within rgee.</p>
-<p>rgee allows to work with the three google API’S, these are:
-- Google Earth Engine
-- Google Drive
-- Google Cloud Storage</p>
+<div id="authentication" class="section level3">
+<h3>2.4 Authentication 🔐</h3>
+<p>When working with Google Earth Engine it is necessary to register our credentials only if they are needed to move data from Google Drive and Google Cloud Storage to our local environment. These dependencies are not mandatory, but are available within rgee.
+rgee allows to work with the three google API’S, these are:</p>
+<ul>
+<li><strong>Google Earth Engine</strong></li>
+<li><strong>Google Drive</strong></li>
+<li><strong>Google Cloud Storage</strong></li>
+</ul>
 <p>To authenticate/initialize either Google Drive or Google Cloud Storage, you just need to run:</p>
 <pre class="r"><code>library(rgee)
 #ee_reattach() # reattach ee as a reserve word
@@ -124,8 +123,8 @@ ee_Initialize(user = &#39;user_name@gmail.com&#39;, drive = TRUE, gcs = TRUE)</c
 <p>Remember you only have to authorize once, for subsequent sessions it will not be necessary.</p>
 <p>More information, please click <a href="https://r-spatial.github.io/rgee/articles/rgee01.html#authentication">here</a></p>
 </div>
-<div id="hello-spatial-world" class="section level1">
-<h1><strong>Hello spatial world</strong></h1>
+<div id="hello-spatial-world" class="section level3">
+<h3>2.5 Hello spatial world 🌎</h3>
 <pre class="r"><code>library(rgee)
 ee_Initialize()</code></pre>
 <pre><code>&gt; library(rgee)
@@ -147,21 +146,25 @@ ee$String(&quot;Hello World from Earth Engine!&quot;) %&gt;%
 +     ee$String$getInfo()
 [1] &quot;Hello World from Earth Engine!&quot;</code></pre>
 <p><strong>Viewing elevation data (pipe integration)</strong></p>
-<pre class="r"><code>ee$Image(&quot;CGIAR/SRTM90_V4&quot;) %&gt;%
-  Map$addLayer(
-    visParams = list(
-      min = 500,
-      max = 5000,
-      palette = cpt(&quot;grass_elevation&quot;,rev = TRUE)
-      )
-    )</code></pre>
+<pre class="r"><code>library(rgee)
+library(cptcity)
+ee_Initialize()
+
+viz = list(
+  min = 500,
+  max = 5000,
+  palette = cpt(&quot;grass_elevation&quot;,rev = TRUE)
+  )
+  
+ee$Image(&quot;CGIAR/SRTM90_V4&quot;) %&gt;%
+  Map$addLayer(name = &quot;Elevation&quot;,visParams = viz) + 
+  Map$addLegend(visParams = viz)</code></pre>
 <center>
-<a href="#"><img src="https://user-images.githubusercontent.com/23284899/152284874-c1005391-5267-44de-8bf0-6245b90570c4.png
-" width="100%"></a>
+<a href="#"><img src="https://user-images.githubusercontent.com/23284899/152376518-5e9d62d1-a87a-439a-b5ee-5a9a33ddea0e.png" width="100%"></a>
 </center>
 </div>
-<div id="more-examples" class="section level1">
-<h1><strong>More examples</strong></h1>
+<div id="more-examples" class="section level3">
+<h3>2.6 More examples 📚</h3>
 <center>
 <a href="https://github.com/r-spatial/rgee/tree/examples"><img src="https://user-images.githubusercontent.com/23284899/152283689-c5a4c789-793a-40ac-b4b8-905007bd1764.png
 " width="100%"></a>
