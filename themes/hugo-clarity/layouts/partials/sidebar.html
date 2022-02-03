@@ -18,7 +18,7 @@
       {{- else }}
         <h2>{{  if $fullAuthor }}{{ $author.name }}{{ else }}{{ $author }}{{ end }}</h2>
       {{- end }}
-      <div class="author_bio">
+      <div class="author_bio" style="text-align:initial;">
         {{ markdownify $s.IntroDescription }}
       </div>
       {{- if ( ne $s.introURL false ) }}
