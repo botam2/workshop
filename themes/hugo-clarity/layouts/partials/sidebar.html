@@ -21,7 +21,7 @@
       <div class="author_bio" style="text-align:initial;">
         {{ markdownify $s.IntroDescription }}
       </div>
-      <!-- Other author-->
+      <!-- Author 2 -->
       <div class="author_header">
          <img src="https://user-images.githubusercontent.com/23284899/151292854-47fbdc8b-f947-46ed-8af1-853a3f2d6d30.png" alt="{{ $author.name }} photo" align="center" style="margin: 2rem 0rem 0rem 0rem;">
           <h2>Antony Barja</h2>
@@ -29,27 +29,34 @@
        <div class="author_bio" style="text-align:initial;">
           BSc in Geographical Engineering-National University of San Marcos, data analyst at Health Innovation Lab
        </div>
-
+      <!-- Read more -->
       {{- if ( ne $s.introURL false ) }}
       {{- $r := T "read_more" }}
       <a href='{{ absLangURL (default "about/" $s.introURL) }}' class="button mt-1" role="button" title='{{ $r }}'>{{ $r }}</a>
       {{- end }}
-    {{- end }} 
-    {{ if (and ($relatedInSidebar) (isset .Params "series") ) }}
-       {{$related := where .Site.RegularPages ".Params.series" "eq" .Params.series }} 
-       {{ end }} 
-       {{- $posts := where (where .Site.RegularPages "Permalink" "!=" .Permalink) "Type" "in" $s.mainSections }} 
-       {{- $featured := default 8 $s.numberOfFeaturedPosts }} 
-       {{- with first $featured (where $posts "Params.featured" true)}} 
-       {{- end }}
-        <h2 class="mt-4" style="text-align:initial;">Table of contents</h2>
-        <ul class="flex-column">
-            {{- $recent := default 8 $s.numberOfRecentPosts }} {{- range first $recent $posts }}
-            <li>
-                <a href="{{ .Permalink }}" class="nav-link" title="{{ .Title }}">{{ .Title }}</a>
-            </li>
-            {{- end }}
-        </ul>
+    {{- end }}
+
+    {{- $posts := where (where .Site.RegularPages "Permalink" "!=" .Permalink) "Type" "in" $s.mainSections }}
+    {{- $featured := default 8 $s.numberOfFeaturedPosts }}
+    {{- with first $featured (where $posts "Params.featured" true)}}
+    <h2 class="mt-4" style="text-align:initial;">Table of contents</h2>
+    <ul>
+      {{- range . }}
+      <li>
+        <a href="{{ .Permalink }}" class="nav-link" title="{{ .Title }}">{{ .Title }}</a>
+      </li>
+      {{- end }}
+    </ul>
+    {{- end }}
+    <h2 class="mt-4">{{ T "recent_posts" }}</h2>
+    <ul class="flex-column">
+      {{- $recent := default 8 $s.numberOfRecentPosts }}
+      {{- range first $recent $posts }}
+      <li>
+        <a href="{{ .Permalink }}" class="nav-link" title="{{ .Title }}">{{ .Title }}</a>
+      </li>
+      {{- end }}
+    </ul>
     <!-- tags -->
     {{- $tagsLimit := (default 100 $s.numberOfTagsShown) }}
     {{- range $key, $value := .Site.Taxonomies }}
