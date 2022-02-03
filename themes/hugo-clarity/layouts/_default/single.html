@@ -21,6 +21,7 @@
     <h2>{{ T "overview" }}</h2>
     {{ .TableOfContents }}
     {{ end }}
+    <br>
     {{- .Content }}
     {{- $showComments := true }}
     {{- if eq $s.comments false }}
