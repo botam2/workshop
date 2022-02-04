@@ -41,7 +41,6 @@ ee_Initialize() # Initialize gee inside R with acount registered
 ```
 
 ```{r, eval= FALSE}
-blogdown::shortcode("highlight", "r", .content = '
 # 1. Cookind data with rgee --------------------------------------------------------------
 dataset <- ee$ImageCollection$Dataset$ECMWF_ERA5_LAND_MONTHLY
 past <- dataset$
@@ -60,11 +59,9 @@ Map$addLayer(
     max = 25,
     palette = cpt(pal = "gmt_GMT_seis",n = 10))
   )
-')  
 ```
 
 ```{r, eval= FALSE}
-blogdown::shortcode("highlight", "r", .content = '
 # Define box to study area 
 geometry <- ee$Geometry$Rectangle(
   coords = c(-180,-90,180,90),
@@ -87,19 +84,16 @@ world_temp <- ee_as_thumbnail(
   raster = TRUE,       # If FALSE returns a stars object. FALSE by default
   vizparams = list(min = -53.14849, max = 29.68718)
 )
-')
 ```
 
 ```{r, eval= FALSE}
 # 2. Cooking data for mapping with tmap --------------------------------------------------
-blogdown::shortcode("highlight", "r", .content = '
 # Define a projection (EPSG:4326 - WGS 84)
 crs(world_temp) <- 4326
 world_temp[] <- scales::rescale(
   getValues(world_temp),
   c(minmax$temperature_2m_min, minmax$temperature_2m_max)
 ) 
-
 # Load world vector (available after load tmap)
 data("World") 
 
@@ -109,7 +103,8 @@ robin <- "+proj=robin +lon_0=0 +x_0=0 +y_0=0 +ellps=WGS84 +datum=WGS84 +units=m 
 # Remove the temperature value of sea
 map <-  world_temp %>% 
   mask(World) 
-
+```
+```{r, eval= FALSE}
 # Elaboration of the Temperature Map
 temp_map <- map %>% 
   tm_shape(projection = robin,raster.warp = FALSE) +
@@ -149,7 +144,6 @@ temp_map <- map %>%
     ) 
 # Export map in svg format
 tmap_save(temp_map,"temp_map.png",width = 6,height = 3)
-')
 ```
 
 <center>
