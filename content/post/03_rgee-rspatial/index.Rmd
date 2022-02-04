@@ -27,7 +27,7 @@ and it is precisely in this aspect that the rgee package aims to work and be par
 to process large spatial datasets in an accessible and user-friendly way hand in hand 
 with the integration of the spatial universe of R packages.
 
-### Mapping the present temperature 
+### Mapping the past temperature 
 
 For this example, we use the ERA5-Land dataset,  a reanalysis dataset providing a consistent view of the evolution of
 land variables over several decades at an enhanced resolution compared to ERA5.
@@ -41,7 +41,9 @@ library(tmap)
 library(raster)
 library(cptcity)
 ee_Initialize() # Initialize gee inside R with acount registered
+```
 
+```{r, eval= FALSE}
 # 1. Cookind data with rgee --------------------------------------------------------------
 dataset <- ee$ImageCollection$Dataset$ECMWF_ERA5_LAND_MONTHLY
 past <- dataset$
@@ -60,7 +62,9 @@ Map$addLayer(
     max = 25,
     palette = cpt(pal = "gmt_GMT_seis",n = 10))
   )
+```
 
+```{r, eval= FALSE}
 # Define box to study area 
 geometry <- ee$Geometry$Rectangle(
   coords = c(-180,-90,180,90),
@@ -83,7 +87,9 @@ world_temp <- ee_as_thumbnail(
   raster = TRUE,       # If FALSE returns a stars object. FALSE by default
   vizparams = list(min = -53.14849, max = 29.68718)
 )
+```
 
+```{r, eval= FALSE}
 # 2. Cooking data for mapping with tmap --------------------------------------------------
 
 # Define a projection (EPSG:4326 - WGS 84)
