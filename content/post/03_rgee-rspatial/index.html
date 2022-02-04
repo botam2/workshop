@@ -3,6 +3,7 @@ title: "3. Integration of rgee with r-spatial ecosystem"
 author: "Gabriel Carrasco & Antony Barja"
 date: 2020-12-01T21:13:14-05:00
 tags: ["rspatial"]
+featured: no
 ---
 
 <script src="{{< blogdown/postref >}}index_files/header-attrs/header-attrs.js"></script>
@@ -33,7 +34,8 @@ library(tmap)
 library(raster)
 library(cptcity)
 ee_Initialize() # Initialize gee inside R with acount registered</code></pre>
-<pre class="r"><code># 1. Cookind data with rgee --------------------------------------------------------------
+<pre class="r"><code>blogdown::shortcode(&quot;highlight&quot;, &quot;r&quot;, .content = &#39;
+# 1. Cookind data with rgee --------------------------------------------------------------
 dataset &lt;- ee$ImageCollection$Dataset$ECMWF_ERA5_LAND_MONTHLY
 past &lt;- dataset$
   select(&quot;temperature_2m&quot;)$
@@ -50,8 +52,10 @@ Map$addLayer(
     min = 5,
     max = 25,
     palette = cpt(pal = &quot;gmt_GMT_seis&quot;,n = 10))
-  )</code></pre>
-<pre class="r"><code># Define box to study area 
+  )
+&#39;)  </code></pre>
+<pre class="r"><code>blogdown::shortcode(&quot;highlight&quot;, &quot;r&quot;, .content = &#39;
+# Define box to study area 
 geometry &lt;- ee$Geometry$Rectangle(
   coords = c(-180,-90,180,90),
   proj = &quot;EPSG:4326&quot;,
@@ -72,9 +76,10 @@ world_temp &lt;- ee_as_thumbnail(
   dimensions = 1024,   # output dimension
   raster = TRUE,       # If FALSE returns a stars object. FALSE by default
   vizparams = list(min = -53.14849, max = 29.68718)
-)</code></pre>
+)
+&#39;)</code></pre>
 <pre class="r"><code># 2. Cooking data for mapping with tmap --------------------------------------------------
-
+blogdown::shortcode(&quot;highlight&quot;, &quot;r&quot;, .content = &#39;
 # Define a projection (EPSG:4326 - WGS 84)
 crs(world_temp) &lt;- 4326
 world_temp[] &lt;- scales::rescale(
@@ -130,7 +135,8 @@ temp_map &lt;- map %&gt;%
     size = 0.8
     ) 
 # Export map in svg format
-tmap_save(temp_map,&quot;temp_map.png&quot;,width = 6,height = 3)</code></pre>
+tmap_save(temp_map,&quot;temp_map.png&quot;,width = 6,height = 3)
+&#39;)</code></pre>
 <center>
 <img src="https://user-images.githubusercontent.com/23284899/152614266-7fac2efc-f1e8-4c77-9ef8-dbdc71e5ba7c.png" width="100%">
 </center>

@@ -3,11 +3,8 @@ title: "3. Integration of rgee with r-spatial ecosystem"
 author: "Gabriel Carrasco & Antony Barja"
 date: 2020-12-01T21:13:14-05:00
 tags: ["rspatial"]
+featured: no
 ---
-
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(collapse = TRUE)
-```
 
 <center>
  <img src="https://user-images.githubusercontent.com/23284899/152370944-34183116-6abf-4b4f-b1d0-b65620bc614d.png" width="90%" heigth="80px">
@@ -44,6 +41,7 @@ ee_Initialize() # Initialize gee inside R with acount registered
 ```
 
 ```{r, eval= FALSE}
+blogdown::shortcode("highlight", "r", .content = '
 # 1. Cookind data with rgee --------------------------------------------------------------
 dataset <- ee$ImageCollection$Dataset$ECMWF_ERA5_LAND_MONTHLY
 past <- dataset$
@@ -62,9 +60,11 @@ Map$addLayer(
     max = 25,
     palette = cpt(pal = "gmt_GMT_seis",n = 10))
   )
+')  
 ```
 
 ```{r, eval= FALSE}
+blogdown::shortcode("highlight", "r", .content = '
 # Define box to study area 
 geometry <- ee$Geometry$Rectangle(
   coords = c(-180,-90,180,90),
@@ -87,11 +87,12 @@ world_temp <- ee_as_thumbnail(
   raster = TRUE,       # If FALSE returns a stars object. FALSE by default
   vizparams = list(min = -53.14849, max = 29.68718)
 )
+')
 ```
 
 ```{r, eval= FALSE}
 # 2. Cooking data for mapping with tmap --------------------------------------------------
-
+blogdown::shortcode("highlight", "r", .content = '
 # Define a projection (EPSG:4326 - WGS 84)
 crs(world_temp) <- 4326
 world_temp[] <- scales::rescale(
@@ -148,6 +149,7 @@ temp_map <- map %>%
     ) 
 # Export map in svg format
 tmap_save(temp_map,"temp_map.png",width = 6,height = 3)
+')
 ```
 
 <center>
