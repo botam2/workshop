@@ -143,7 +143,7 @@ library(plotly)
 area_Ha <- read_rds("data/data_demo2")
 ```
 
-```{r,eval = TRUE,fig.align='center'}
+```{r,eval = TRUE,fig.align='center',fig.height=3.5}
 g1 <- area_Ha %>%
   filter(DISTRITO == "LURIN" & values != 0) %>% 
   ggplot(aes(x = Category, y = values, fill = Category)) +
