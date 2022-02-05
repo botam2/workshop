@@ -9,7 +9,7 @@ tags: ["statisticzonal","SO2"]
 
 
 <p>The objective of this demo is identitfy the regions that has high concentration of
-SO2 emmision inside of the city of Lima and Huancayo - Peru.</p>
+SO2 emmision inside of the city of <a href="https://es.wikipedia.org/wiki/Lima_Metropolitana">Lima</a> and <a href="https://es.wikipedia.org/wiki/Provincia_de_Huancayo">Huancayo</a> - Peru.</p>
 <table>
 <tbody>
 <tr class="odd">
@@ -24,12 +24,17 @@ SO2 emmision inside of the city of Lima and Huancayo - Peru.</p>
 <h4>1. Requeriments</h4>
 <pre class="r"><code>library(rgee)
 library(sf)
-library(viridis)
-library(ggplot2)
+library(viridis)   
+library(tidyverse)
 library(ggspatial)
-library(dplyr)
 library(patchwork)
 ee_Initialize()</code></pre>
+<pre><code>&gt; ee_Initialize()
+── rgee 1.1.2 ────────────────────────── earthengine-api 0.1.292 ── 
+ ✓ user: not_defined
+ ✓ Initializing Google Earth Engine:  DONE!
+ ✓ Earth Engine account: users/ambarja 
+─────────────────────────────────────────────────────────────────── </code></pre>
 </div>
 <div id="reading-vector-layer-of-study-area" class="section level4">
 <h4>2. Reading vector layer of study area</h4>
