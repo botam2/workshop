@@ -11,11 +11,18 @@ is of Copernicus Global Land Service (CGLS) that provides a series of bio-geophy
 products on the status and evolution of land surface at global scale to a spatial resolution of 100m,
 more information [click here](https://developers.google.com/earth-engine/datasets/catalog/COPERNICUS_Landcover_100m_Proba-V-C3_Global#description)
 
+
+---
+<img src="https://user-images.githubusercontent.com/23284899/151858857-e98d6216-73be-4ffd-a95e-0b93fedbc0df.png" width="25px" align="center"><b> Information:</b>
+- For this demo we need to have install the packages of `rgee`, `sf`, `tidyverse` and `plotly`.
+---
+
 #### 1. Requeriments
 ```{r, eval = FALSE}
 library(rgee)
 library(tidyverse)
 library(sf)
+library(plotly)
 ee_Initialize()
 ```
 ```
