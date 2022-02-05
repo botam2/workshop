@@ -40,7 +40,7 @@ ee_Initialize()
  ✓ Earth Engine account: users/ambarja 
 ─────────────────────────────────────────────────────────────────── 
 ```
-#### 2. Reading vector layer of study area 
+#### 2. Vector layer reading of our study area 
 ```{r, eval = FALSE}
 geodata <- st_read(
   "https://github.com/ambarja/gpkg-pe/raw/main/san_diego.geojson"
@@ -281,4 +281,3 @@ Map$addLayer(index,visParams = viz) +
 <center>
    <img src="https://user-images.githubusercontent.com/23284899/152656080-1d9d8c20-10d3-4c1b-aa68-6c3eee215ded.png" width="100%">
 </center>
-

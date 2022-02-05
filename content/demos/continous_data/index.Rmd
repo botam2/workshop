@@ -34,7 +34,7 @@ ee_Initialize()
 ─────────────────────────────────────────────────────────────────── 
 ```
 
-#### 2. Reading vector layer of study area
+#### 2. Vector layer reading of our study area 
 ```{r,eval = FALSE}
 lima <- st_read(
   "https://github.com/ambarja/gpkg-pe/raw/main/lima_distritos.gpkg",

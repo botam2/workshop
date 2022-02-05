@@ -15,7 +15,7 @@
 
 [[main]]
   name = "rgeeExtra"
-  url = "demo/"
+  url = "rgee_extra"
   weight = -108  
 
 [[main]]

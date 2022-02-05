@@ -4,7 +4,6 @@ date: "2019-03-10"
 description: Installation of rgee step by step in the differents Operative System
 tags:
 - installation
-thumbnail: images/dollar.png
 title: Installation of rgee 
 ---
 
