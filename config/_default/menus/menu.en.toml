@@ -13,21 +13,15 @@
   url = "demo/"
   weight = -109  
 
-# Submenus are done this way: parent -> identifier
 [[main]]
-  name = "Links"
-  identifier = "Links"
-  weight = -108
-  
-[[main]]
-  parent = "Links"
-  name = "Curriculum Vitae"
-  url = "https://datamares.netlify.app/files/cv.pdf"
+  name = "rgeeExtra"
+  url = "demo/"
+  weight = -108  
 
 [[main]]
   name = "About"
   url = "about/"
-  weight = -107
+  weight = -106
 
 # social menu links
 
@@ -35,23 +29,19 @@
   name = "github"
   type = "social"
   weight = 1
-  url = "https://github.com/albersonmiranda"
+  url = "https://github.com/healthinnovation"
 [[social]]
   name = "twitter"
   weight = 2
-  url = "https://twitter.com/AlbersonMiranda"
-[[social]]
-  name = "linkedin"
-  weight = 3
-  url = "https://www.linkedin.com/in/albersonmiranda/"
+  url = "https://twitter.com/innovalab_imt"
 [[social]]
   name = "facebook"
   weight = 3
-  url = "https://www.facebook.com/alberson.miranda"
+  url = "https://www.facebook.com/imt.innovalab"
 [[social]]
   name = "instagram"
-  weight = 3
-  url = "https://www.instagram.com/alberson.miranda/"
+  weight = 4
+  url = "https://www.instagram.com/innovalab_imt/"
 
 #[[social]]
 #  name = "rss"
