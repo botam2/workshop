@@ -10,7 +10,7 @@
   
 [[main]]
   name = "Demos"
-  url = "demo/"
+  url = "demos/"
   weight = -109  
 
 [[main]]
